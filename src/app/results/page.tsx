@@ -8,6 +8,9 @@ export default function ResultsPage(): React.JSX.Element {
     id: string;
     description: string;
     helpUrl: string;
+    selector: string;
+    code: string;
+    message: string;
   }
 
   const [issues, setIssues] = useState<Issue[] | null>(null);
@@ -45,9 +48,36 @@ export default function ResultsPage(): React.JSX.Element {
       </p>
       <div className="bg-white shadow-md rounded-lg p-6">
         <p className="text-gray-500">
-          {issues
-            ? `Found ${issues.length} issues.`
-            : "Loading or no issues found."}
+          {issues && issues.length > 0 && (
+            <div className="mt-6 grid gap-4 md:grid-cols-2">
+              {issues.map((issue, idx) => (
+                <div
+                  key={idx}
+                  className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm transition hover:shadow-md"
+                >
+                  <h2 className="text-lg font-semibold text-purple-700 mb-1">
+                    {issue.code}
+                  </h2>
+                  <p className="text-sm text-gray-700 mb-2">{issue.message}</p>
+
+                  {issue.helpUrl && (
+                    <a
+                      href={issue.helpUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm text-blue-600 underline hover:text-blue-800"
+                    >
+                      Learn more
+                    </a>
+                  )}
+
+                  <div className="mt-2 text-xs text-gray-500 break-all">
+                    <strong>Selector:</strong> {issue.selector}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </p>
       </div>
     </main>
