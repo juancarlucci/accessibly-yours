@@ -3,7 +3,7 @@
 import React, { useState, useMemo } from "react";
 
 export default function DemoResultsPage(): React.JSX.Element {
-  const fakeIssues = [
+  const allIssues = [
     {
       id: "1",
       code: "WCAG2AA.1.1.1.H37",
@@ -58,6 +58,9 @@ export default function DemoResultsPage(): React.JSX.Element {
 
   const [selectedImpact, setSelectedImpact] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
+  const [uiState, setUiState] = useState<
+    "normal" | "empty" | "loading" | "error"
+  >("normal");
 
   const colors = {
     minor: "bg-yellow-100 text-yellow-700",
@@ -68,7 +71,8 @@ export default function DemoResultsPage(): React.JSX.Element {
   };
 
   const filteredIssues = useMemo(() => {
-    return fakeIssues.filter((issue) => {
+    const dataset = uiState === "normal" ? allIssues : [];
+    return dataset.filter((issue) => {
       const matchesImpact =
         selectedImpact === "all" || issue.impact === selectedImpact;
       const matchesSearch =
@@ -77,13 +81,30 @@ export default function DemoResultsPage(): React.JSX.Element {
         issue.selector.toLowerCase().includes(searchTerm.toLowerCase());
       return matchesImpact && matchesSearch;
     });
-  }, [selectedImpact, searchTerm]);
+  }, [selectedImpact, searchTerm, uiState]);
 
   return (
     <main className="min-h-screen bg-gray-50 text-gray-800 px-6 py-16">
       <h1 className="text-4xl font-bold text-purple-700 mb-4">
         🧪 Accessibility Demo Panel
       </h1>
+
+      {/* UI State Toggle Buttons */}
+      <div className="mb-6 flex gap-2 flex-wrap">
+        {["normal", "empty", "loading", "error"].map((state) => (
+          <button
+            key={state}
+            onClick={() => setUiState(state as typeof uiState)}
+            className={`px-3 py-1 rounded text-sm border transition ${
+              uiState === state
+                ? "bg-purple-100 text-purple-700 border-purple-300"
+                : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100"
+            }`}
+          >
+            {state}
+          </button>
+        ))}
+      </div>
 
       <div className="mb-6">
         <p className="text-sm text-gray-600 mb-2">
@@ -134,46 +155,59 @@ export default function DemoResultsPage(): React.JSX.Element {
         </div>
       </div>
 
-      <section className="grid gap-4 md:grid-cols-2">
-        {filteredIssues.map((issue, idx) => (
-          <article
-            key={idx}
-            className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm transition hover:shadow-md overflow-hidden"
-          >
-            <header className="mb-1 break-words">
-              <h2 className="text-lg font-semibold text-purple-700 break-all max-w-full whitespace-pre-wrap">
-                {issue.code}
-              </h2>
-              <span
-                className={`inline-block mt-1 px-2 py-1 text-xs font-medium rounded ${
-                  colors[issue.impact as keyof typeof colors] ||
-                  "bg-gray-100 text-gray-700"
-                }`}
-              >
-                {issue.impact}
-              </span>
-            </header>
-            <p className="text-sm text-gray-700 mb-2 whitespace-pre-wrap">
-              {issue.message}
-            </p>
+      {/* Loading/Error/Empty States */}
+      {uiState === "loading" ? (
+        <p className="text-gray-500">🔄 Loading simulated results...</p>
+      ) : uiState === "error" ? (
+        <p className="text-red-600 font-semibold">
+          ❌ Simulated error fetching issues. Please try again.
+        </p>
+      ) : filteredIssues.length === 0 ? (
+        <p className="text-green-600 font-semibold">
+          ✅ No issues to display (simulated empty state).
+        </p>
+      ) : (
+        <section className="grid gap-4 md:grid-cols-2">
+          {filteredIssues.map((issue, idx) => (
+            <article
+              key={idx}
+              className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm transition hover:shadow-md overflow-hidden"
+            >
+              <header className="mb-1 break-words">
+                <h2 className="text-lg font-semibold text-purple-700 break-all max-w-full whitespace-pre-wrap">
+                  {issue.code}
+                </h2>
+                <span
+                  className={`inline-block mt-1 px-2 py-1 text-xs font-medium rounded ${
+                    colors[issue.impact as keyof typeof colors] ||
+                    "bg-gray-100 text-gray-700"
+                  }`}
+                >
+                  {issue.impact}
+                </span>
+              </header>
+              <p className="text-sm text-gray-700 mb-2 whitespace-pre-wrap">
+                {issue.message}
+              </p>
 
-            {issue.helpUrl && (
-              <a
-                href={issue.helpUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-sm text-blue-600 underline hover:text-blue-800"
-              >
-                Learn more
-              </a>
-            )}
+              {issue.helpUrl && (
+                <a
+                  href={issue.helpUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm text-blue-600 underline hover:text-blue-800"
+                >
+                  Learn more
+                </a>
+              )}
 
-            <div className="mt-2 text-xs text-gray-500 break-all">
-              <strong>Selector:</strong> {issue.selector}
-            </div>
-          </article>
-        ))}
-      </section>
+              <div className="mt-2 text-xs text-gray-500 break-all">
+                <strong>Selector:</strong> {issue.selector}
+              </div>
+            </article>
+          ))}
+        </section>
+      )}
     </main>
   );
 }
