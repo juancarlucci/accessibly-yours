@@ -86,6 +86,32 @@ export default function DemoResultsPage(): React.JSX.Element {
     });
   }, [allIssues, selectedImpact, searchTerm, uiState]);
 
+  function handleDownloadCSV() {
+    if (!filteredIssues.length) return;
+    const header = Object.keys(filteredIssues[0]).join(",");
+    const rows = filteredIssues.map((issue) =>
+      Object.values(issue)
+        .map((val) => `"${String(val).replace(/"/g, '""')}"`)
+        .join(",")
+    );
+    const csv = [header, ...rows].join("\n");
+    downloadFile("issues.csv", csv);
+  }
+
+  function handleDownloadJSON() {
+    const json = JSON.stringify(filteredIssues, null, 2);
+    downloadFile("issues.json", json);
+  }
+
+  function downloadFile(filename: string, content: string) {
+    const blob = new Blob([content], { type: "text/plain" });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = filename;
+    link.click();
+    URL.revokeObjectURL(link.href);
+  }
+
   return (
     <main className="min-h-screen bg-gray-50 text-gray-800 px-6 py-16">
       <h1 className="text-4xl font-bold text-purple-700 mb-4">
@@ -107,6 +133,22 @@ export default function DemoResultsPage(): React.JSX.Element {
             {state}
           </button>
         ))}
+      </div>
+
+      {/* Export Buttons */}
+      <div className="flex gap-2 mb-4">
+        <button
+          onClick={handleDownloadCSV}
+          className="px-3 py-1 rounded bg-purple-600 text-white hover:bg-purple-700 text-sm"
+        >
+          Export CSV
+        </button>
+        <button
+          onClick={handleDownloadJSON}
+          className="px-3 py-1 rounded bg-gray-600 text-white hover:bg-gray-700 text-sm"
+        >
+          Export JSON
+        </button>
       </div>
 
       <div className="mb-6">
