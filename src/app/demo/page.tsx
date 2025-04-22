@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useState, useMemo } from "react";
+import IssueCard, { Issue } from "@/components/IssueCard";
+import Controls from "@/components/Controls";
 
 export default function DemoResultsPage(): React.JSX.Element {
   const [selectedImpact, setSelectedImpact] = useState("all");
@@ -9,7 +11,7 @@ export default function DemoResultsPage(): React.JSX.Element {
     "normal" | "empty" | "loading" | "error"
   >("normal");
 
-  const allIssues = useMemo(
+  const allIssues: Issue[] = useMemo(
     () => [
       {
         id: "1",
@@ -64,14 +66,6 @@ export default function DemoResultsPage(): React.JSX.Element {
     ],
     []
   );
-
-  const colors = {
-    minor: "bg-yellow-100 text-yellow-700",
-    moderate: "bg-orange-100 text-orange-700",
-    serious: "bg-red-100 text-red-700",
-    critical: "bg-purple-100 text-purple-700",
-    undefined: "bg-gray-100 text-gray-700",
-  };
 
   const filteredIssues = useMemo(() => {
     const dataset = uiState === "normal" ? allIssues : [];
@@ -176,28 +170,12 @@ export default function DemoResultsPage(): React.JSX.Element {
           </li>
         </ul>
 
-        <div className="flex flex-col md:flex-row md:items-center gap-4">
-          <select
-            className="border rounded px-3 py-2"
-            value={selectedImpact}
-            onChange={(e) => setSelectedImpact(e.target.value)}
-          >
-            <option value="all">All Severities</option>
-            <option value="critical">Critical</option>
-            <option value="serious">Serious</option>
-            <option value="moderate">Moderate</option>
-            <option value="minor">Minor</option>
-            <option value="undefined">Undefined</option>
-          </select>
-
-          <input
-            type="text"
-            className="border rounded px-3 py-2 flex-1"
-            placeholder="Search message or selector..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-        </div>
+        <Controls
+          selectedImpact={selectedImpact}
+          searchTerm={searchTerm}
+          setSelectedImpact={setSelectedImpact}
+          setSearchTerm={setSearchTerm}
+        />
       </div>
 
       {/* Loading/Error/Empty States */}
@@ -213,43 +191,8 @@ export default function DemoResultsPage(): React.JSX.Element {
         </p>
       ) : (
         <section className="grid gap-4 md:grid-cols-2">
-          {filteredIssues.map((issue, idx) => (
-            <article
-              key={idx}
-              className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm transition hover:shadow-md overflow-hidden"
-            >
-              <header className="mb-1 break-words">
-                <h2 className="text-lg font-semibold text-purple-700 break-all max-w-full whitespace-pre-wrap">
-                  {issue.code}
-                </h2>
-                <span
-                  className={`inline-block mt-1 px-2 py-1 text-xs font-medium rounded ${
-                    colors[issue.impact as keyof typeof colors] ||
-                    "bg-gray-100 text-gray-700"
-                  }`}
-                >
-                  {issue.impact}
-                </span>
-              </header>
-              <p className="text-sm text-gray-700 mb-2 whitespace-pre-wrap">
-                {issue.message}
-              </p>
-
-              {issue.helpUrl && (
-                <a
-                  href={issue.helpUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-sm text-blue-600 underline hover:text-blue-800"
-                >
-                  Learn more
-                </a>
-              )}
-
-              <div className="mt-2 text-xs text-gray-500 break-all">
-                <strong>Selector:</strong> {issue.selector}
-              </div>
-            </article>
+          {filteredIssues.map((issue) => (
+            <IssueCard key={issue.id} issue={issue} />
           ))}
         </section>
       )}
