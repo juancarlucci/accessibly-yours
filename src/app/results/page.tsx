@@ -19,6 +19,8 @@ export default function ResultsPage(): React.JSX.Element {
   const [issues, setIssues] = useState<Issue[] | null>(null);
   const [loading, setLoading] = useState<boolean>(true); // * loading state
   const [urlError, setUrlError] = useState<string | null>(null); // * error state for invalid URL
+  const [selectedImpact, setSelectedImpact] = useState<string>("all"); // * impact filter
+  const [searchTerm, setSearchTerm] = useState<string>(""); // * search filter
 
   // * Basic URL validation function
   function isValidUrl(userInput: string): boolean {
@@ -60,7 +62,12 @@ export default function ResultsPage(): React.JSX.Element {
         );
         const jsonData = await result.json();
         console.log("Raw audit response:", jsonData); // * useful for debugging
-        setIssues(Array.isArray(jsonData.issues) ? jsonData.issues : []);
+        setIssues(
+          (Array.isArray(jsonData.issues) ? jsonData.issues : []).map((i) => ({
+            ...i,
+            impact: i.impact || "undefined",
+          }))
+        );
       } catch (err) {
         console.error("Error fetching audit results:", err);
       } finally {
@@ -73,12 +80,12 @@ export default function ResultsPage(): React.JSX.Element {
 
   // * Helper for styled impact badge
   const renderImpactBadge = (impact?: string) => {
-    if (!impact) return null;
     const colors = {
       minor: "bg-yellow-100 text-yellow-700",
       moderate: "bg-orange-100 text-orange-700",
       serious: "bg-red-100 text-red-700",
       critical: "bg-purple-100 text-purple-700",
+      undefined: "bg-gray-100 text-gray-700",
     };
     const badgeStyle =
       colors[impact as keyof typeof colors] || "bg-gray-100 text-gray-700";
@@ -101,6 +108,19 @@ export default function ResultsPage(): React.JSX.Element {
     return counts;
   }, [issues]);
 
+  // * Filtered issues based on selected impact and search
+  const filteredIssues = useMemo(() => {
+    return (issues || []).filter((issue) => {
+      const matchesImpact =
+        selectedImpact === "all" || issue.impact === selectedImpact;
+      const matchesSearch =
+        issue.code.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        issue.message.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        issue.selector.toLowerCase().includes(searchTerm.toLowerCase());
+      return matchesImpact && matchesSearch;
+    });
+  }, [issues, selectedImpact, searchTerm]);
+
   return (
     <main className="min-h-screen bg-gray-50 text-gray-800 px-6 py-16">
       <h1 className="text-4xl font-bold text-purple-700 mb-4">
@@ -117,6 +137,30 @@ export default function ResultsPage(): React.JSX.Element {
           <p className="text-gray-500">Loading results...</p>
         ) : Array.isArray(issues) && issues.length > 0 ? (
           <>
+            {/* Filter Controls */}
+            <div className="mb-6 flex flex-col md:flex-row md:items-center gap-4">
+              <select
+                className="border rounded px-3 py-2"
+                value={selectedImpact}
+                onChange={(e) => setSelectedImpact(e.target.value)}
+              >
+                <option value="all">All Severities</option>
+                <option value="critical">Critical</option>
+                <option value="serious">Serious</option>
+                <option value="moderate">Moderate</option>
+                <option value="minor">Minor</option>
+                <option value="undefined">Undefined</option>
+              </select>
+              <input
+                type="text"
+                className="border rounded px-3 py-2 flex-1"
+                placeholder="Search message or selector..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </div>
+
+            {/* Summary Counts */}
             <div className="mb-4 flex flex-wrap gap-2">
               {Object.entries(issueCounts).map(([level, count]) => (
                 <span
@@ -128,14 +172,16 @@ export default function ResultsPage(): React.JSX.Element {
               ))}
             </div>
 
+            {/* Filtered Issues List */}
             <section className="mt-6 grid gap-4 md:grid-cols-2">
-              {issues.map((issue, idx) => (
+              {filteredIssues.map((issue, idx) => (
                 <article
                   key={idx}
-                  className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm transition hover:shadow-md"
+                  className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm transition hover:shadow-md overflow-hidden" // Added overflow-hidden
                 >
                   <header className="mb-1">
-                    <h2 className="text-lg font-semibold text-purple-700">
+                    <h2 className="text-lg font-semibold text-purple-700 break-all whitespace-pre-wrap max-w-full">
+                      {/* Updated classes */}
                       {issue.code}
                     </h2>
                     <div className="mt-1">
