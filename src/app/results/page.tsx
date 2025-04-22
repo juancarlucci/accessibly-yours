@@ -181,7 +181,6 @@ export default function ResultsPage(): React.JSX.Element {
                 >
                   <header className="mb-1">
                     <h2 className="text-lg font-semibold text-purple-700 break-all whitespace-pre-wrap max-w-full">
-                      {/* Updated classes */}
                       {issue.code}
                     </h2>
                     <div className="mt-1">
