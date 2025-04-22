@@ -63,10 +63,12 @@ export default function ResultsPage(): React.JSX.Element {
         const jsonData = await result.json();
         console.log("Raw audit response:", jsonData); // * useful for debugging
         setIssues(
-          (Array.isArray(jsonData.issues) ? jsonData.issues : []).map((i) => ({
-            ...i,
-            impact: i.impact || "undefined",
-          }))
+          (Array.isArray(jsonData.issues) ? jsonData.issues : []).map(
+            (i: Issue) => ({
+              ...i,
+              impact: i.impact || "undefined",
+            })
+          )
         );
       } catch (err) {
         console.error("Error fetching audit results:", err);
