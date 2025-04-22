@@ -1,11 +1,11 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 
 export default function ResultsPage(): React.JSX.Element {
   const [url, setUrl] = useState<string>("Unknown site");
 
-  //* Define the structure of each issue returned from the audit API
+  // Define the structure of each issue returned from the audit API
   interface Issue {
     id: string;
     description: string;
@@ -13,11 +13,22 @@ export default function ResultsPage(): React.JSX.Element {
     selector: string;
     code: string;
     message: string;
-    impact?: string;
+    impact?: string; // * optionally present impact level
   }
 
   const [issues, setIssues] = useState<Issue[] | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(true); // * loading state
+  const [urlError, setUrlError] = useState<string | null>(null); // * error state for invalid URL
+
+  // * Basic URL validation function
+  function isValidUrl(userInput: string): boolean {
+    try {
+      new URL(userInput);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -25,6 +36,15 @@ export default function ResultsPage(): React.JSX.Element {
 
     if (!site) {
       console.warn("No URL provided for audit.");
+      setLoading(false);
+      return;
+    }
+
+    if (!isValidUrl(site)) {
+      console.warn("Invalid URL:", site);
+      setUrlError(
+        "❌ The provided URL is not valid. Please check it and try again."
+      );
       setLoading(false);
       return;
     }
@@ -71,6 +91,16 @@ export default function ResultsPage(): React.JSX.Element {
     );
   };
 
+  // * Count summary for each impact level
+  const issueCounts = useMemo(() => {
+    const counts: Record<string, number> = {};
+    (issues || []).forEach((i) => {
+      const level = i.impact || "undefined";
+      counts[level] = (counts[level] || 0) + 1;
+    });
+    return counts;
+  }, [issues]);
+
   return (
     <main className="min-h-screen bg-gray-50 text-gray-800 px-6 py-16">
       <h1 className="text-4xl font-bold text-purple-700 mb-4">
@@ -81,40 +111,57 @@ export default function ResultsPage(): React.JSX.Element {
       </p>
 
       <div className="bg-white shadow-md rounded-lg p-6">
-        {loading ? (
+        {urlError ? (
+          <p className="text-red-600 font-semibold">{urlError}</p>
+        ) : loading ? (
           <p className="text-gray-500">Loading results...</p>
         ) : Array.isArray(issues) && issues.length > 0 ? (
-          <section className="mt-6 grid gap-4 md:grid-cols-2">
-            {issues.map((issue, idx) => (
-              <article
-                key={idx}
-                className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm transition hover:shadow-md"
-              >
-                <header className="mb-1">
-                  <h2 className="text-lg font-semibold text-purple-700">
-                    {issue.code}
-                  </h2>
-                  <div className="mt-1">{renderImpactBadge(issue.impact)}</div>
-                </header>
-                <p className="text-sm text-gray-700 mb-2">{issue.message}</p>
+          <>
+            <div className="mb-4 flex flex-wrap gap-2">
+              {Object.entries(issueCounts).map(([level, count]) => (
+                <span
+                  key={level}
+                  className="px-3 py-1 text-sm rounded-full bg-gray-200 text-gray-700"
+                >
+                  {level}: {count}
+                </span>
+              ))}
+            </div>
 
-                {issue.helpUrl && (
-                  <a
-                    href={issue.helpUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-sm text-blue-600 underline hover:text-blue-800"
-                  >
-                    Learn more
-                  </a>
-                )}
+            <section className="mt-6 grid gap-4 md:grid-cols-2">
+              {issues.map((issue, idx) => (
+                <article
+                  key={idx}
+                  className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm transition hover:shadow-md"
+                >
+                  <header className="mb-1">
+                    <h2 className="text-lg font-semibold text-purple-700">
+                      {issue.code}
+                    </h2>
+                    <div className="mt-1">
+                      {renderImpactBadge(issue.impact)}
+                    </div>
+                  </header>
+                  <p className="text-sm text-gray-700 mb-2">{issue.message}</p>
 
-                <div className="mt-2 text-xs text-gray-500 break-all">
-                  <strong>Selector:</strong> {issue.selector}
-                </div>
-              </article>
-            ))}
-          </section>
+                  {issue.helpUrl && (
+                    <a
+                      href={issue.helpUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm text-blue-600 underline hover:text-blue-800"
+                    >
+                      Learn more
+                    </a>
+                  )}
+
+                  <div className="mt-2 text-xs text-gray-500 break-all">
+                    <strong>Selector:</strong> {issue.selector}
+                  </div>
+                </article>
+              ))}
+            </section>
+          </>
         ) : !loading ? (
           <p className="text-red-600 font-semibold">
             ⚠️ Could not retrieve valid issues. Please check the URL.
