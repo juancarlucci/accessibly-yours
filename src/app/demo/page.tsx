@@ -3,64 +3,67 @@
 import React, { useState, useMemo } from "react";
 
 export default function DemoResultsPage(): React.JSX.Element {
-  const allIssues = [
-    {
-      id: "1",
-      code: "WCAG2AA.1.1.1.H37",
-      message: "Image element missing alt attribute.",
-      selector: "img.logo",
-      helpUrl:
-        "https://dequeuniversity.com/rules/axe/4.8/image-alt?application=axeAPI",
-      description: "Add meaningful alt text to images.",
-      impact: "critical",
-    },
-    {
-      id: "2",
-      code: "WCAG2AA.1.3.1.F68",
-      message: "Form field missing label.",
-      selector: "input#email",
-      helpUrl:
-        "https://dequeuniversity.com/rules/axe/4.8/label?application=axeAPI",
-      description: "Ensure all form fields have associated labels.",
-      impact: "serious",
-    },
-    {
-      id: "3",
-      code: "WCAG2AA.1.4.3.G18",
-      message: "Text does not meet contrast ratio requirements.",
-      selector: ".low-contrast",
-      helpUrl:
-        "https://dequeuniversity.com/rules/axe/4.8/color-contrast?application=axeAPI",
-      description: "Adjust color contrast to meet WCAG standards.",
-      impact: "moderate",
-    },
-    {
-      id: "4",
-      code: "WCAG2AA.2.4.4.H77",
-      message: "Link text is not descriptive.",
-      selector: "a.more-info",
-      helpUrl:
-        "https://dequeuniversity.com/rules/axe/4.8/link-name?application=axeAPI",
-      description: "Make link text meaningful.",
-      impact: "minor",
-    },
-    {
-      id: "5",
-      code: "CUSTOM.ARIA.ROLE",
-      message: "Custom component uses an invalid ARIA role.",
-      selector: "x-foo[role=magic]",
-      helpUrl:
-        "https://dequeuniversity.com/rules/axe/4.8/aria-roles?application=axeAPI",
-      description: "Use valid ARIA roles only.",
-      impact: "undefined",
-    },
-  ];
-
   const [selectedImpact, setSelectedImpact] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
   const [uiState, setUiState] = useState<
     "normal" | "empty" | "loading" | "error"
   >("normal");
+
+  const allIssues = useMemo(
+    () => [
+      {
+        id: "1",
+        code: "WCAG2AA.1.1.1.H37",
+        message: "Image element missing alt attribute.",
+        selector: "img.logo",
+        helpUrl:
+          "https://dequeuniversity.com/rules/axe/4.8/image-alt?application=axeAPI",
+        description: "Add meaningful alt text to images.",
+        impact: "critical",
+      },
+      {
+        id: "2",
+        code: "WCAG2AA.1.3.1.F68",
+        message: "Form field missing label.",
+        selector: "input#email",
+        helpUrl:
+          "https://dequeuniversity.com/rules/axe/4.8/label?application=axeAPI",
+        description: "Ensure all form fields have associated labels.",
+        impact: "serious",
+      },
+      {
+        id: "3",
+        code: "WCAG2AA.1.4.3.G18",
+        message: "Text does not meet contrast ratio requirements.",
+        selector: ".low-contrast",
+        helpUrl:
+          "https://dequeuniversity.com/rules/axe/4.8/color-contrast?application=axeAPI",
+        description: "Adjust color contrast to meet WCAG standards.",
+        impact: "moderate",
+      },
+      {
+        id: "4",
+        code: "WCAG2AA.2.4.4.H77",
+        message: "Link text is not descriptive.",
+        selector: "a.more-info",
+        helpUrl:
+          "https://dequeuniversity.com/rules/axe/4.8/link-name?application=axeAPI",
+        description: "Make link text meaningful.",
+        impact: "minor",
+      },
+      {
+        id: "5",
+        code: "CUSTOM.ARIA.ROLE",
+        message: "Custom component uses an invalid ARIA role.",
+        selector: "x-foo[role=magic]",
+        helpUrl:
+          "https://dequeuniversity.com/rules/axe/4.8/aria-roles?application=axeAPI",
+        description: "Use valid ARIA roles only.",
+        impact: "undefined",
+      },
+    ],
+    []
+  );
 
   const colors = {
     minor: "bg-yellow-100 text-yellow-700",
@@ -81,7 +84,7 @@ export default function DemoResultsPage(): React.JSX.Element {
         issue.selector.toLowerCase().includes(searchTerm.toLowerCase());
       return matchesImpact && matchesSearch;
     });
-  }, [selectedImpact, searchTerm, uiState]);
+  }, [allIssues, selectedImpact, searchTerm, uiState]);
 
   return (
     <main className="min-h-screen bg-gray-50 text-gray-800 px-6 py-16">
@@ -127,7 +130,7 @@ export default function DemoResultsPage(): React.JSX.Element {
             <strong>Minor:</strong> Small enhancements (e.g., link clarity)
           </li>
           <li>
-            <strong>Undefined:</strong> Issue doesn't have a severity assigned
+            <strong>Undefined:</strong> Issue doesn’t have a severity assigned
           </li>
         </ul>
 
