@@ -27,7 +27,7 @@ export default function ResultsPage(): React.JSX.Element {
     try {
       new URL(userInput);
       return true;
-    } catch (e) {
+    } catch {
       return false;
     }
   }
