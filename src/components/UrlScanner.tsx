@@ -1,11 +1,18 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, type RefObject } from "react";
 import { useRouter } from "next/navigation";
 
-export default function UrlScanner() {
+interface UrlScannerProps {
+  inputRef?: RefObject<HTMLInputElement | null>;
+}
+
+export default function UrlScanner({
+  inputRef,
+}: UrlScannerProps): React.JSX.Element {
   const [url, setUrl] = useState("");
   const router = useRouter();
+  const localRef = useRef<HTMLInputElement>(null);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -31,6 +38,7 @@ export default function UrlScanner() {
         placeholder="https://example.com"
         value={url}
         onChange={(e) => setUrl(e.target.value)}
+        ref={inputRef ?? localRef} // * Use external ref if provided
         className="w-full p-3 rounded-lg border border-gray-300 mb-4"
       />
       <button
