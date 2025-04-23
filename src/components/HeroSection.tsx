@@ -1,12 +1,27 @@
-export default function HeroSection() {
+"use client";
+
+import React from "react";
+
+interface HeroSectionProps {
+  onCallToAction?: () => void;
+}
+
+export default function HeroSection({
+  onCallToAction,
+}: HeroSectionProps): React.JSX.Element {
   return (
-    <section className="min-h-screen flex flex-col items-center justify-center text-center bg-gradient-to-br from-purple-600 to-orange-400 text-white px-4">
-      <h1 className="text-5xl font-bold mb-4">Accessibly Yours</h1>
-      <p className="text-xl max-w-xl mb-8">
-        Make accessibility effortless and empowering. Run an audit, get instant
-        insights, and start fixing with joy.
+    <section className="min-h-screen flex flex-col justify-center items-center bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white px-6 text-center">
+      <h1 className="text-5xl md:text-7xl font-extrabold leading-tight mb-6">
+        Build for Everyone
+      </h1>
+      <p className="text-lg md:text-xl max-w-2xl mb-8">
+        Accessibility isn’t an afterthought—it’s a foundation. Discover issues.
+        Learn. Fix. Repeat.
       </p>
-      <button className="bg-white text-purple-600 font-semibold text-lg px-8 py-3 rounded-full shadow-md hover:bg-gray-100 transition">
+      <button
+        onClick={onCallToAction}
+        className="bg-white text-purple-700 px-6 py-3 rounded-full font-semibold hover:bg-gray-100 transition"
+      >
         Audit My Site
       </button>
     </section>
