@@ -10,14 +10,14 @@ export default function HeroAccessibilityScene(): React.JSX.Element {
   // * Track scroll progress relative to the section
   const { scrollYProgress } = useScroll({
     target: ref,
-    offset: ["start end", "center 40%"],
+    offset: ["start end", "start 20%"],
   });
 
   // * Animate combined filter: blur + contrast
   const filter = useTransform(
     scrollYProgress,
     [0, 1],
-    ["blur(18px) contrast(0.6)", "blur(0px) contrast(1.2)"]
+    ["blur(38px) contrast(0.6)", "blur(0px) contrast(1.2)"]
   );
   const opacity = useTransform(scrollYProgress, [0, 1], [0.4, 1]);
 
@@ -33,9 +33,12 @@ export default function HeroAccessibilityScene(): React.JSX.Element {
         Accessibility is <br /> about clarity
       </motion.h1>
 
-      <motion.p className="mt-8 text-xl md:text-2xl text-white/70 font-medium max-w-xl px-6">
-        Scroll down to remove the blur and reveal what everyone deserves: clear,
-        inclusive experiences.
+      <motion.p
+        style={{ filter, opacity }}
+        className="mt-8 text-xl md:text-2xl text-white/70 font-medium max-w-xl px-6"
+      >
+        Scroll down to remove the blur and reveal what everyone wants: clear
+        experiences.
       </motion.p>
 
       {/* Wavy SVG divider at the bottom */}
