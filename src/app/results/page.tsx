@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import IssueCard, { Issue } from "@/components/IssueCard";
 import Controls from "@/components/Controls";
 import ExportButtons from "@/components/ExportButtons";
+import Link from "next/link";
 
 export default function ResultsPage(): React.JSX.Element {
   const [url, setUrl] = useState<string>("Unknown site");
@@ -35,7 +36,6 @@ export default function ResultsPage(): React.JSX.Element {
         );
 
         if (result.status === 429) {
-          //* Rate limit response from backend
           setUrlError(
             "🚫 Too many requests. Please wait a few minutes before trying again."
           );
@@ -67,41 +67,56 @@ export default function ResultsPage(): React.JSX.Element {
   });
 
   return (
-    <main className="min-h-screen bg-gray-50 text-gray-800 px-6 py-16">
-      <h1 className="text-4xl font-bold text-purple-700 mb-4">
-        🧪 Accessibility Audit Results
-      </h1>
-      <p className="text-lg mb-8">
-        Scanned URL: <strong>{url}</strong>
-      </p>
-
-      <div className="bg-white shadow-md rounded-lg p-6">
-        {urlError ? (
-          <p className="text-red-600 font-semibold">{urlError}</p>
-        ) : loading ? (
-          <p className="text-gray-500">Loading results...</p>
-        ) : issues && issues.length > 0 ? (
-          <>
-            <div className="mb-6">
-              <Controls
-                selectedImpact={selectedImpact}
-                searchTerm={searchTerm}
-                setSelectedImpact={setSelectedImpact}
-                setSearchTerm={setSearchTerm}
-              />
-            </div>
-            <ExportButtons issues={filteredIssues} />
-            <section className="mt-6 grid gap-4 md:grid-cols-2">
-              {filteredIssues.map((issue, idx) => (
-                <IssueCard key={idx} issue={issue} />
-              ))}
-            </section>
-          </>
-        ) : (
-          <p className="text-green-600 font-semibold">
-            ✅ No accessibility issues detected or no results to show.
+    <main className="min-h-screen bg-gradient-to-b from-white via-purple-50 to-purple-100 text-gray-800 px-6 py-16">
+      <div className="max-w-6xl mx-auto">
+        <div className="text-center mb-12">
+          <h1 className="text-5xl font-extrabold text-purple-800 mb-4">
+            🧪 Accessibility Audit Results
+          </h1>
+          <p className="text-lg text-purple-600">
+            Scanned URL: <strong>{url}</strong>
           </p>
-        )}
+        </div>
+
+        <div className="flex justify-center mb-10">
+          <Link
+            href="/"
+            className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-6 rounded-lg transition"
+          >
+            ← Back to Home
+          </Link>
+        </div>
+
+        <div className="bg-white shadow-2xl rounded-3xl p-10">
+          {urlError ? (
+            <p className="text-red-600 font-semibold text-center">{urlError}</p>
+          ) : loading ? (
+            <p className="text-gray-500 text-center">Loading results...</p>
+          ) : issues && issues.length > 0 ? (
+            <>
+              <div className="mb-8">
+                <Controls
+                  selectedImpact={selectedImpact}
+                  searchTerm={searchTerm}
+                  setSelectedImpact={setSelectedImpact}
+                  setSearchTerm={setSearchTerm}
+                />
+              </div>
+              <div className="mb-8">
+                <ExportButtons issues={filteredIssues} />
+              </div>
+              <section className="mt-6 grid gap-6 md:grid-cols-2">
+                {filteredIssues.map((issue, idx) => (
+                  <IssueCard key={idx} issue={issue} />
+                ))}
+              </section>
+            </>
+          ) : (
+            <p className="text-green-600 font-semibold text-center">
+              ✅ No accessibility issues detected or no results to show.
+            </p>
+          )}
+        </div>
       </div>
     </main>
   );

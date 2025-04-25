@@ -1,8 +1,10 @@
+// src/pages/demo.tsx
 "use client";
 
 import React, { useState, useMemo } from "react";
 import IssueCard, { Issue } from "@/components/IssueCard";
 import Controls from "@/components/Controls";
+import Link from "next/link";
 
 export default function DemoResultsPage(): React.JSX.Element {
   const [selectedImpact, setSelectedImpact] = useState("all");
@@ -107,10 +109,23 @@ export default function DemoResultsPage(): React.JSX.Element {
   }
 
   return (
-    <main className="min-h-screen bg-gray-50 text-gray-800 px-6 py-16">
+    <main className="bg-gray-50 text-gray-800 px-6 py-16 min-h-screen">
+      {/* Back to Home Button */}
+      <div className="mb-6">
+        <Link href="/">
+          <button className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition text-sm">
+            ← Back to Home
+          </button>
+        </Link>
+      </div>
+
       <h1 className="text-4xl font-bold text-purple-700 mb-4">
-        🧪 Accessibility Demo Panel
+        🧪 Explore Accessibility Issues Your Way
       </h1>
+      <p className="text-lg text-gray-600 mb-6 max-w-2xl">
+        Dive into a sample scan and discover how small changes can make a big
+        impact—filter, export, and learn at your own pace.
+      </p>
 
       {/* UI State Toggle Buttons */}
       <div className="mb-6 flex gap-2 flex-wrap">
@@ -150,22 +165,22 @@ export default function DemoResultsPage(): React.JSX.Element {
           <strong>Severity legend:</strong>
         </p>
         <ul className="text-sm text-gray-600 list-disc list-inside mb-4">
-          <li>
+          <li className="[&::marker]:text-purple-700">
             <strong>Critical:</strong> Major blockers (e.g., no alt text, no
             keyboard access)
           </li>
-          <li>
+          <li className="[&::marker]:text-red-700">
             <strong>Serious:</strong> Severe usability issues (e.g., missing
             labels)
           </li>
-          <li>
+          <li className="[&::marker]:text-orange-700">
             <strong>Moderate:</strong> Impacts some users (e.g., contrast
             issues)
           </li>
-          <li>
+          <li className="[&::marker]:text-yellow-700">
             <strong>Minor:</strong> Small enhancements (e.g., link clarity)
           </li>
-          <li>
+          <li className="[&::marker]:text-gray-700">
             <strong>Undefined:</strong> Issue doesn’t have a severity assigned
           </li>
         </ul>
@@ -190,7 +205,7 @@ export default function DemoResultsPage(): React.JSX.Element {
           ✅ No issues to display (simulated empty state).
         </p>
       ) : (
-        <section className="grid gap-4 md:grid-cols-2">
+        <section className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {filteredIssues.map((issue) => (
             <IssueCard key={issue.id} issue={issue} />
           ))}
