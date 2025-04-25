@@ -22,6 +22,7 @@ export default function HeroSection({
       </p>
       <button
         onClick={onCallToAction}
+        aria-label="Scroll to website scanner input"
         className="bg-white text-purple-700 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition"
       >
         Audit My Site
