@@ -5,7 +5,7 @@ import { RefObject } from "react";
 function ScannYours({
   inputRef,
 }: {
-  inputRef?: React.RefObject<HTMLInputElement | null>;
+  inputRef?: RefObject<HTMLInputElement | null>;
 }) {
   return (
     <>
