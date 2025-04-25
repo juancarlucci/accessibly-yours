@@ -26,9 +26,12 @@ export default function UrlScanner({
   return (
     <form
       onSubmit={handleSubmit}
-      className="bg-white max-w-lg mx-auto mt-12 p-6 rounded-xl shadow-md"
+      className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 max-w-lg mx-auto mt-12 p-6 rounded-xl shadow-md"
     >
-      <label htmlFor="url" className="block text-lg font-medium mb-2">
+      <label
+        htmlFor="url"
+        className="block text-xl text-white font-normal my-4"
+      >
         Enter a website URL to scan
       </label>
       <input
@@ -39,11 +42,11 @@ export default function UrlScanner({
         value={url}
         onChange={(e) => setUrl(e.target.value)}
         ref={inputRef ?? localRef} // * Use external ref if provided
-        className="w-full p-3 rounded-lg border border-gray-300 mb-4"
+        className="w-full p-3 rounded-lg text-black border border-gray-300 mb-4"
       />
       <button
         type="submit"
-        className="bg-purple-600 text-white py-2 px-6 rounded-full font-semibold hover:bg-purple-700"
+        className="bg-white text-black py-2 px-6 rounded-lg transition font-semibold hover:bg-purple-700 hover:text-white"
       >
         🚀 Scan Now
       </button>
