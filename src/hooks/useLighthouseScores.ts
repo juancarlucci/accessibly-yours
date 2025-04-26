@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-export function useLighthouseScores(siteUrl: string | number | boolean) {
+export function useLighthouseScores(siteUrl: string | null) {
   const [scores, setScores] = useState<{
     performance: number;
     accessibility: number;
@@ -12,19 +12,27 @@ export function useLighthouseScores(siteUrl: string | number | boolean) {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!siteUrl) return; // Skip if siteUrl is not ready
+    if (!siteUrl) return;
 
     async function fetchScores() {
       setLoading(true);
       setError(null);
 
-      // ✅ Check localStorage first
-      const cachedScores = localStorage.getItem(`lighthouse-${siteUrl}`);
-      if (cachedScores) {
-        console.log("Loaded Lighthouse scores from cache");
-        setScores(JSON.parse(cachedScores));
-        setLoading(false);
-        return;
+      // ✅ Check localStorage for Lighthouse with expiry
+      const cached = localStorage.getItem(`lighthouse-${siteUrl}`);
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        const ageMs = Date.now() - parsed.timestamp;
+        const ageDays = ageMs / (1000 * 60 * 60 * 24);
+
+        if (ageDays < 5) {
+          console.log("Loaded Lighthouse scores from cache");
+          setScores(parsed.data);
+          setLoading(false);
+          return;
+        } else {
+          console.log("Cached Lighthouse scores expired, refetching...");
+        }
       }
 
       try {
@@ -37,8 +45,12 @@ export function useLighthouseScores(siteUrl: string | number | boolean) {
         const data = await res.json();
         setScores(data);
 
-        // ✅ Cache the results
-        localStorage.setItem(`lighthouse-${siteUrl}`, JSON.stringify(data));
+        // ✅ Save to cache with timestamp
+        const now = Date.now();
+        localStorage.setItem(
+          `lighthouse-${siteUrl}`,
+          JSON.stringify({ data, timestamp: now })
+        );
       } catch (err: unknown) {
         console.error("Error fetching Lighthouse scores:", err);
         setError("Failed to fetch Lighthouse scores");
