@@ -29,7 +29,7 @@ export default function HeroAccessibilityScene(): React.JSX.Element {
         </motion.h1>
         <motion.p
           style={{ filter, opacity }}
-          className="mt-8 text-xl md:text-2xl text-white/70 font-medium max-w-xl px-6"
+          className="mt-8 text-xl md:text-2xl text-white/70 font-medium readable-width px-6"
         >
           Keep scrolling to see how clarity empowers every choice.
         </motion.p>

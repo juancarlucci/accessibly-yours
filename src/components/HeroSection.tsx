@@ -14,10 +14,10 @@ export default function HeroSection({
       <h1 className="text-5xl md:text-7xl font-extrabold leading-tight mb-6">
         Create What Everyone Wants
       </h1>
-      <p className="text-lg md:text-xl max-w-2xl">
+      <p className="text-lg md:text-xl readable-width">
         Accessibility lets you design experiences users truly crave.
       </p>
-      <p className="text-lg md:text-xl max-w-2xl mb-8">
+      <p className="text-lg md:text-xl readable-width mb-8">
         Explore. Learn. Improve—on your terms.
       </p>
       <button
