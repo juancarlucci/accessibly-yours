@@ -9,12 +9,23 @@ export async function GET(req: NextRequest) {
   const apiKey = process.env.PSI_API_KEY;
   console.log("[DEBUG] PSI_API_KEY value:", process.env.PSI_API_KEY);
 
+  if (!apiKey) {
+    console.error("Missing PSI_API_KEY environment variable");
+    return new Response(
+      JSON.stringify({ error: "Missing PageSpeed API key" }),
+      { status: 500 }
+    );
+  }
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 9000); // Abort after 9 seconds
+
   try {
     const apiUrl = `https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=${encodeURIComponent(
       site
     )}&category=PERFORMANCE&category=ACCESSIBILITY&category=SEO&key=${apiKey}`;
 
     const response = await fetch(apiUrl);
+    clearTimeout(timeoutId);
     const json = await response.json();
 
     const scores = {
@@ -25,6 +36,7 @@ export async function GET(req: NextRequest) {
 
     return new Response(JSON.stringify(scores), { status: 200 });
   } catch (error) {
+    clearTimeout(timeoutId);
     console.error("Error fetching Lighthouse scores:", error);
     return new Response(JSON.stringify({ error: "Failed to fetch scores" }), {
       status: 500,
