@@ -5,15 +5,22 @@ import IssueCard, { Issue } from "@/components/IssueCard";
 import Controls from "@/components/Controls";
 import ExportButtons from "@/components/ExportButtons";
 import Link from "next/link";
+import { useLighthouseScores } from "@/hooks/useLighthouseScores";
+import AnimatedCounter from "@/components/AnimatedCounter";
 
 export default function ResultsPage(): React.JSX.Element {
-  const [url, setUrl] = useState<string>("Unknown site");
-
+  const [url, setUrl] = useState<string>("");
   const [issues, setIssues] = useState<Issue[] | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [urlError, setUrlError] = useState<string | null>(null);
   const [selectedImpact, setSelectedImpact] = useState<string>("all");
   const [searchTerm, setSearchTerm] = useState<string>("");
+
+  const {
+    scores,
+    loading: loadingScores,
+    error: scoreError,
+  } = useLighthouseScores(url && url !== "Unknown site" ? url : undefined);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -27,33 +34,40 @@ export default function ResultsPage(): React.JSX.Element {
 
     setUrl(site);
 
-    async function fetchData() {
-      try {
-        const result = await fetch(
-          `https://audit-api-fly-01.fly.dev/audit?url=${encodeURIComponent(
-            site || ""
-          )}`
-        );
-
-        if (result.status === 429) {
-          setUrlError(
-            "🚫 Too many requests. Please wait a few minutes before trying again."
+    // 1. Check localStorage for cached WCAG audit results
+    const cachedIssues = localStorage.getItem(`pa11y-${site}`);
+    if (cachedIssues) {
+      setIssues(JSON.parse(cachedIssues));
+      setLoading(false);
+    } else {
+      // 2. If not cached, fetch audit
+      async function fetchData() {
+        try {
+          const result = await fetch(
+            `https://audit-api-fly-01.fly.dev/audit?url=${encodeURIComponent(
+              site || ""
+            )}`
           );
+          if (result.status === 429) {
+            setUrlError(
+              "🚫 Too many requests. Please wait a few minutes before trying again."
+            );
+            setLoading(false);
+            return;
+          }
+          const jsonData = await result.json();
+          const issues = Array.isArray(jsonData.issues) ? jsonData.issues : [];
+          setIssues(issues);
+          localStorage.setItem(`pa11y-${site}`, JSON.stringify(issues)); // ✅ Cache it
+        } catch (err) {
+          console.error("Error fetching audit results:", err);
+          setUrlError("❌ An error occurred while fetching the audit.");
+        } finally {
           setLoading(false);
-          return;
         }
-
-        const jsonData = await result.json();
-        setIssues(Array.isArray(jsonData.issues) ? jsonData.issues : []);
-      } catch (err) {
-        console.error("Error fetching audit results:", err);
-        setUrlError("❌ An error occurred while fetching the audit.");
-      } finally {
-        setLoading(false);
       }
+      fetchData();
     }
-
-    fetchData();
   }, []);
 
   const filteredIssues = (issues || []).filter((issue) => {
@@ -77,7 +91,6 @@ export default function ResultsPage(): React.JSX.Element {
             Scanned URL: <strong>{url}</strong>
           </p>
         </div>
-
         <div className="flex justify-center mb-10">
           <Link
             href="/"
@@ -86,6 +99,32 @@ export default function ResultsPage(): React.JSX.Element {
             ← Back to Home
           </Link>
         </div>
+
+        {/* Site Quality Snapshot */}
+        {url && url !== "Unknown site" && (
+          <div className="text-center mb-10">
+            <h2 className="text-2xl font-bold text-purple-700 mb-4">
+              Site Quality Snapshot
+            </h2>
+            {loadingScores ? (
+              <p className="text-gray-500">Fetching Lighthouse scores...</p>
+            ) : scoreError ? (
+              <p className="text-red-600">Error: {scoreError}</p>
+            ) : scores ? (
+              <div className="flex flex-wrap justify-center gap-4">
+                <div className="bg-white text-purple-700 px-4 py-2 rounded-lg shadow">
+                  Performance: <AnimatedCounter to={scores.performance} />
+                </div>
+                <div className="bg-white text-purple-700 px-4 py-2 rounded-lg shadow">
+                  Accessibility: <AnimatedCounter to={scores.accessibility} />
+                </div>
+                <div className="bg-white text-purple-700 px-4 py-2 rounded-lg shadow">
+                  SEO: <AnimatedCounter to={scores.seo} />{" "}
+                </div>
+              </div>
+            ) : null}
+          </div>
+        )}
 
         <div className="bg-white shadow-2xl rounded-3xl p-10">
           {urlError ? (
