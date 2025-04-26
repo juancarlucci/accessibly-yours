@@ -79,6 +79,11 @@ image::https://img.shields.io/badge/Lighthouse-100%20Performance,%20Accessibilit
 
 *All categories scored 100 in latest Lighthouse audit (FCP: 0.3s, LCP: 0.5s, CLS: 0, TBT: 10ms).*
 
+- 🚀 **Smart Local Storage Caching**:
+  - WCAG/pa11y audit results are cached per URL.
+  - Lighthouse Site Quality scores are also cached per URL.
+  - Reduces network calls, improves reload speeds dramatically.
+
 
 == Gotchas / Notes
 
@@ -93,8 +98,6 @@ This app emphasizes exploration rather than enforcement of standards.
 ✨ Visualize audit results with charts and scores
 
 ✨ Offer smart fix suggestions based on audit results
-
-✨ Save scan history using localStorage or Supabase
 
 ✨ Progressive Web App (PWA) support for offline exploration
 
