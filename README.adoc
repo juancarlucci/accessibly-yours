@@ -12,11 +12,9 @@ Accessibly Yours is a React + Next.js web app that invites users to explore acce
 
 This app was created to:
 
-Demonstrate technical excellence in React, Next.js App Router, and performance-optimized architecture.
-
-Empower developers to uncover opportunities for better web experiences.
-
-Build a project that uses real-world audits and invites exploration.
+- Demonstrate technical excellence in React, Next.js App Router, and performance-optimized architecture.
+- Empower developers to uncover opportunities for better web experiences.
+- Build a project that uses real-world audits and invites exploration.
 
 == Architecture Overview
 
@@ -24,62 +22,65 @@ The frontend (accessibly-yours) is deployed on Vercel and communicates with a ba
 
 Why this split?
 
-Vercel streamlines modern frontend deployments with static generation and SSR support.
-Fly.io enables full Node.js servers with headless browsers like Chromium—essential for real audits.
+- Vercel streamlines modern frontend deployments with static generation and SSR support.
+- Fly.io enables full Node.js servers with headless browsers like Chromium—essential for real audits.
+
+== Homepage Overview
+
+image::public/screenshots/Accessibly-Yours-Home.png[Homepage Screenshot, width=700]
+
+The entry point for users to start their accessibility journey.
+
+== Interactive Demo Experience
+
+image::public/screenshots/Accessibly-Yours-Demo.png[Demo Results Screenshot, width=700]
+
+Explore common accessibility issues and solutions through playful animations and dynamic demos.
+
+== Real-Time Accessibility Audits
+
+image::public/screenshots/Accessibly-Yours-Scanner.png[Audit Results Screenshot, width=700]
+
+Scan any public website to uncover accessibility insights and opportunities.
+
+== Site Quality Snapshot
+
+image::public/screenshots/Accessibly-Yours-Lighthouse.png[Site Quality Snapshot, width=700]
+
+Get an instant visual overview of your site's quality scores with animated counters and smart caching.
 
 == Key Features
 
-🔍 Scan any public website and explore accessibility opportunities
-- Real-time audit of any public website
-- See sample audit results from a demo
-
-image::public/screenshots/Accessibly-Yours-Demo.png[Demo Results, width=600]
-
-🧪 Powered by pa11y to surface real WCAG 2.1 audit results
-
-📊 Export findings to CSV or JSON for further discovery
-
-🧠 Clean, engaging UI built with Tailwind CSS, Framer Motion, and React
-
-image::public/screenshots/Accessibly-Yours-Scanner.png[Scan Results, width=600]
-
+- 🔍 Scan any public website and explore accessibility opportunities
+- 🧪 Powered by pa11y to surface real WCAG 2.1 audit results
+- 📊 Export findings to CSV or JSON for further discovery
+- 🧠 Clean, engaging UI built with Tailwind CSS, Framer Motion, and React
 
 == Technology Stack
 
-Frontend: React 18+, Next.js App Router, TypeScript, Tailwind CSS, Framer Motion
-
-Testing: Jest, React Testing Library
-
-Deployment: Vercel (frontend), Fly.io (backend with Puppeteer)
-
-Audit Engine: pa11y, headless Chromium
+- Frontend: React 18+, Next.js App Router, TypeScript, Tailwind CSS, Framer Motion
+- Testing: Jest, React Testing Library
+- Deployment: Vercel (frontend), Fly.io (backend with Puppeteer)
+- Audit Engine: pa11y, headless Chromium
 
 == Setup & Development
 
-Clone the repository
-
-Run npm install
-
-Start local dev server: npm run dev
-
-Environment should point to: https://audit-api-fly-01.fly.dev
+1. Clone the repository
+2. Run `npm install`
+3. Start local dev server: `npm run dev`
+4. Ensure the environment points to: `https://audit-api-fly-01.fly.dev`
 
 == Deployment
 
-Push to main branch → auto-deploys to Vercel
-
-Live app: https://accessibly-yours.vercel.app
+- Push to `main` branch → auto-deploys to Vercel
+- Live app: https://accessibly-yours.vercel.app
 
 == Accessibility Principles
 
 - Use of semantic HTML to support screen readers and keyboard navigation
-
 - Clear visual focus indicators for all interactive elements
-
 - Strong color contrast and scalable typography
-
 - Designs that respect user choice and motion preferences (in-progress)
-
 - Storytelling that celebrates curiosity, agency, and clarity
 
 == Audit Results
@@ -93,24 +94,18 @@ image::https://img.shields.io/badge/Lighthouse-100%20Performance,%20Accessibilit
   - Lighthouse Site Quality scores are also cached per URL.
   - Reduces network calls, improves reload speeds dramatically.
 
-
 == Gotchas / Notes
 
-Tailwind CSS SSR hydration is needed; thus, GitHub Pages was not viable.
-
-All audits are proxied through the Fly.io backend to enable headless browsing.
-
-This app emphasizes exploration rather than enforcement of standards.
+- Tailwind CSS SSR hydration is needed; thus, GitHub Pages was not viable.
+- All audits are proxied through the Fly.io backend to enable headless browsing.
+- This app emphasizes exploration rather than enforcement of standards.
 
 == Future Enhancements
 
-✨ Visualize audit results with charts and scores
-
-✨ Offer smart fix suggestions based on audit results
-
-✨ Progressive Web App (PWA) support for offline exploration
-
-✨ Deepen motion accessibility for reduced-motion users
+- ✨ Visualize audit results with charts and scores
+- ✨ Offer smart fix suggestions based on audit results
+- ✨ Progressive Web App (PWA) support for offline exploration
+- ✨ Deepen motion accessibility for reduced-motion users
 
 == Related Project
 
