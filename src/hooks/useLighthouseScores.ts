@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { getFromCache } from "@/utils/cache";
 
 export function useLighthouseScores(siteUrl: string | null) {
   const [scores, setScores] = useState<{
@@ -19,25 +20,21 @@ export function useLighthouseScores(siteUrl: string | null) {
       setError(null);
 
       // ✅ Check localStorage for Lighthouse with expiry
-      const cached = localStorage.getItem(`lighthouse-${siteUrl}`);
-      if (cached) {
-        const parsed = JSON.parse(cached);
-        const ageMs = Date.now() - parsed.timestamp;
-        const ageDays = ageMs / (1000 * 60 * 60 * 24);
-
-        if (ageDays < 5) {
-          console.log("Loaded Lighthouse scores from cache");
-          setScores(parsed.data);
-          setLoading(false);
-          return;
-        } else {
-          console.log("Cached Lighthouse scores expired, refetching...");
-        }
+      const cachedScores = getFromCache<{
+        performance: number;
+        accessibility: number;
+        seo: number;
+      }>(`lighthouse-${siteUrl}`, 5);
+      if (cachedScores) {
+        console.log("Loaded Lighthouse scores from cache");
+        setScores(cachedScores);
+        setLoading(false);
+        return;
       }
 
       try {
         const res = await fetch(
-          `/api/check-lighthouse?url=${encodeURIComponent(siteUrl)}`
+          `/api/check-lighthouse?url=${encodeURIComponent(siteUrl || "")}`
         );
         if (!res.ok) {
           throw new Error("Failed to fetch Lighthouse scores");

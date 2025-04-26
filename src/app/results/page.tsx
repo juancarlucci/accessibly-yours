@@ -7,6 +7,7 @@ import ExportButtons from "@/components/ExportButtons";
 import Link from "next/link";
 import { useLighthouseScores } from "@/hooks/useLighthouseScores";
 import AnimatedCounter from "@/components/AnimatedCounter";
+import { getFromCache } from "@/utils/cache";
 
 export default function ResultsPage(): React.JSX.Element {
   const [url, setUrl] = useState<string>("");
@@ -36,20 +37,12 @@ export default function ResultsPage(): React.JSX.Element {
 
     // 1. Check localStorage for cached WCAG audit results
     // ✅ Check localStorage for cached WCAG audit with expiry
-    const cached = localStorage.getItem(`pa11y-${site}`);
-    if (cached) {
-      const parsed = JSON.parse(cached);
-      const ageMs = Date.now() - parsed.timestamp;
-      const ageDays = ageMs / (1000 * 60 * 60 * 24);
-
-      if (ageDays < 5) {
-        console.log("Loaded WCAG audit from cache");
-        setIssues(parsed.data);
-        setLoading(false);
-        return;
-      } else {
-        console.log("Cached WCAG audit expired, refetching...");
-      }
+    const cachedIssues = getFromCache<Issue[]>(`pa11y-${site}`, 5);
+    if (cachedIssues) {
+      console.log("Loaded WCAG audit from cache");
+      setIssues(cachedIssues);
+      setLoading(false);
+      return;
     }
     // 2. If not cached, fetch audit
     async function fetchData() {
