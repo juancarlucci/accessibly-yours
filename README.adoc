@@ -35,7 +35,7 @@ The entry point for users to start their accessibility journey.
 
 image::public/screenshots/Accessibly-Yours-Demo.png[Demo Results Screenshot, width=700]
 
-Explore common accessibility issues and solutions through playful animations and dynamic demos.
+Explore common accessibility issues and solutions.
 
 == Real-Time Accessibility Audits
 
@@ -45,7 +45,7 @@ Scan any public website to uncover accessibility insights and opportunities.
 
 == Site Quality Snapshot
 
-image::public/screenshots/Accessibly-Yours-Lighthouse.png[Site Quality Snapshot, width=700]
+image::public/screenshots/Accessibly-Yours-Snapshot.png[Site Quality Snapshot, width=700]
 
 Get an instant visual overview of your site's quality scores with animated counters and smart caching.
 
