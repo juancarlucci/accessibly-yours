@@ -1,8 +1,11 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: "export", // ⬅️ Required for static export in Next.js 14+
-  // basePath: "/accessibly-yours", // ⬅️ Your GitHub repo name
-  // assetPrefix: "/accessibly-yours/", // ⬅️ Ensures static files load properly
+  reactStrictMode: true,
+  compress: true, // ✅ Enable gzip compression
+  swcMinify: true, // ✅ Use super-fast SWC minifier
+  experimental: {
+    serverActions: true, // ✅ Future-proofing (optional, safe to leave)
+  },
 };
 
 export default nextConfig;
