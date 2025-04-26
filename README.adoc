@@ -4,7 +4,7 @@
 :toc: macro
 :toclevels: 2
 
-image::/screenshots/Accessibly-Yours-Home.png[Homepage, width=600]
+image::screenshots/Accessibly-Yours-Home.png[Homepage, width=600]
 
 Accessibly Yours is a React + Next.js web app that invites users to explore accessibility with clarity, creativity, and real-time insights. It’s built to showcase best practices in frontend engineering and to spark curiosity about how thoughtful design opens experiences for everyone.
 
@@ -33,7 +33,7 @@ Fly.io enables full Node.js servers with headless browsers like Chromium—essen
 - Real-time audit of any public website
 - See sample audit results from a demo
 
-image::/screenshots/Accessibly-Yours-Demo.png[Demo Results, width=600]
+image::screenshots/Accessibly-Yours-Demo.png[Demo Results, width=600]
 
 🧪 Powered by pa11y to surface real WCAG 2.1 audit results
 
@@ -41,7 +41,7 @@ image::/screenshots/Accessibly-Yours-Demo.png[Demo Results, width=600]
 
 🧠 Clean, engaging UI built with Tailwind CSS, Framer Motion, and React
 
-image::/screenshots/Accessibly-Yours-Scanner.png[Scan Results, width=600]
+image::screenshots/Accessibly-Yours-Scanner.png[Scan Results, width=600]
 
 
 == Technology Stack
