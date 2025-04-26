@@ -36,32 +36,6 @@ function ScannYours({ inputRef }: ScannYoursProps) {
         />
       </div>
 
-      {/* Lighthouse Scores */}
-      {scannedUrl && (
-        <div className="mt-10">
-          <h3 className="text-2xl font-bold text-purple-700 mb-4">
-            Site Quality Snapshot
-          </h3>
-          {loading ? (
-            <p>Fetching scores...</p>
-          ) : error ? (
-            <p className="text-red-600">Error: {error}</p>
-          ) : scores ? (
-            <div className="flex flex-wrap gap-4 justify-center text-lg">
-              <div className="bg-purple-100 text-purple-800 rounded-lg px-4 py-2">
-                Performance: {scores.performance}%
-              </div>
-              <div className="bg-purple-100 text-purple-800 rounded-lg px-4 py-2">
-                Accessibility: {scores.accessibility}%
-              </div>
-              <div className="bg-purple-100 text-purple-800 rounded-lg px-4 py-2">
-                SEO: {scores.seo}%
-              </div>
-            </div>
-          ) : null}
-        </div>
-      )}
-
       <p className="text-base font-medium text-gray-500 mt-16 mb-4">
         Just curious?
       </p>

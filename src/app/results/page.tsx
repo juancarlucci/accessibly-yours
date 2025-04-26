@@ -6,8 +6,8 @@ import Controls from "@/components/Controls";
 import ExportButtons from "@/components/ExportButtons";
 import Link from "next/link";
 import { useLighthouseScores } from "@/hooks/useLighthouseScores";
-import AnimatedCounter from "@/components/AnimatedCounter";
 import { getFromCache } from "@/utils/cache";
+import SiteQualitySnapshot from "@/components/SiteQualitySnapshot";
 
 export default function ResultsPage(): React.JSX.Element {
   const [url, setUrl] = useState<string>("");
@@ -111,48 +111,11 @@ export default function ResultsPage(): React.JSX.Element {
         </div>
 
         {/* Site Quality Snapshot */}
-        {url && url !== "Unknown site" && (
-          <div className="text-center mb-10">
-            <h2 className="text-2xl font-bold text-purple-700 mb-4">
-              Site Quality Snapshot
-            </h2>
-            {loadingScores ? (
-              <p className="text-gray-500">Fetching Lighthouse scores...</p>
-            ) : scoreError ? (
-              <p className="text-red-600">Error: {scoreError}</p>
-            ) : scores ? (
-              <div className="flex flex-wrap justify-center gap-4">
-                <div
-                  className={`px-6 py-3 rounded-xl shadow-lg text-lg font-bold transition ${
-                    scores.performance > 90
-                      ? "bg-green-100 text-green-800 animate-pulse"
-                      : "bg-white text-purple-700"
-                  }`}
-                >
-                  Performance: <AnimatedCounter to={scores.performance} />
-                </div>
-                <div
-                  className={`px-6 py-3 rounded-xl shadow-lg text-lg font-bold transition ${
-                    scores.accessibility > 90
-                      ? "bg-green-100 text-green-800 animate-pulse"
-                      : "bg-white text-purple-700"
-                  }`}
-                >
-                  Accessibility: <AnimatedCounter to={scores.accessibility} />
-                </div>
-                <div
-                  className={`px-6 py-3 rounded-xl shadow-lg text-lg font-bold transition ${
-                    scores.seo > 90
-                      ? "bg-green-100 text-green-800 animate-pulse"
-                      : "bg-white text-purple-700"
-                  }`}
-                >
-                  SEO: <AnimatedCounter to={scores.seo} />
-                </div>
-              </div>
-            ) : null}
-          </div>
-        )}
+        <SiteQualitySnapshot
+          scores={scores}
+          loading={loadingScores}
+          error={scoreError}
+        />
 
         <div className="bg-white shadow-2xl rounded-3xl p-10">
           {urlError ? (
