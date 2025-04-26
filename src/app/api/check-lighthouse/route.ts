@@ -7,6 +7,7 @@ export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const site = searchParams.get("url") || "https://accessibly-yours.vercel.app";
   const apiKey = process.env.PSI_API_KEY;
+  console.log("[DEBUG] PSI_API_KEY value:", process.env.PSI_API_KEY);
 
   try {
     const apiUrl = `https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=${encodeURIComponent(
