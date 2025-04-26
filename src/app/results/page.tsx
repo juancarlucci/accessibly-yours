@@ -35,39 +35,56 @@ export default function ResultsPage(): React.JSX.Element {
     setUrl(site);
 
     // 1. Check localStorage for cached WCAG audit results
-    const cachedIssues = localStorage.getItem(`pa11y-${site}`);
-    if (cachedIssues) {
-      setIssues(JSON.parse(cachedIssues));
-      setLoading(false);
-    } else {
-      // 2. If not cached, fetch audit
-      async function fetchData() {
-        try {
-          const result = await fetch(
-            `https://audit-api-fly-01.fly.dev/audit?url=${encodeURIComponent(
-              site || ""
-            )}`
-          );
-          if (result.status === 429) {
-            setUrlError(
-              "🚫 Too many requests. Please wait a few minutes before trying again."
-            );
-            setLoading(false);
-            return;
-          }
-          const jsonData = await result.json();
-          const issues = Array.isArray(jsonData.issues) ? jsonData.issues : [];
-          setIssues(issues);
-          localStorage.setItem(`pa11y-${site}`, JSON.stringify(issues)); // ✅ Cache it
-        } catch (err) {
-          console.error("Error fetching audit results:", err);
-          setUrlError("❌ An error occurred while fetching the audit.");
-        } finally {
-          setLoading(false);
-        }
+    // ✅ Check localStorage for cached WCAG audit with expiry
+    const cached = localStorage.getItem(`pa11y-${site}`);
+    if (cached) {
+      const parsed = JSON.parse(cached);
+      const ageMs = Date.now() - parsed.timestamp;
+      const ageDays = ageMs / (1000 * 60 * 60 * 24);
+
+      if (ageDays < 5) {
+        console.log("Loaded WCAG audit from cache");
+        setIssues(parsed.data);
+        setLoading(false);
+        return;
+      } else {
+        console.log("Cached WCAG audit expired, refetching...");
       }
-      fetchData();
     }
+    // 2. If not cached, fetch audit
+    async function fetchData() {
+      try {
+        const result = await fetch(
+          `https://audit-api-fly-01.fly.dev/audit?url=${encodeURIComponent(
+            site || ""
+          )}`
+        );
+        if (result.status === 429) {
+          setUrlError(
+            "🚫 Too many requests. Please wait a few minutes before trying again."
+          );
+          setLoading(false);
+          return;
+        }
+        const jsonData = await result.json();
+        const issues = Array.isArray(jsonData.issues) ? jsonData.issues : [];
+        setIssues(issues);
+
+        // ✅ Save to cache with timestamp
+        const now = Date.now();
+        localStorage.setItem(
+          `pa11y-${site}`,
+          JSON.stringify({ data: issues, timestamp: now })
+        );
+      } catch (err) {
+        console.error("Error fetching audit results:", err);
+        setUrlError("❌ An error occurred while fetching the audit.");
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchData();
   }, []);
 
   const filteredIssues = (issues || []).filter((issue) => {
