@@ -20,7 +20,7 @@ export default function ResultsPage(): React.JSX.Element {
     scores,
     loading: loadingScores,
     error: scoreError,
-  } = useLighthouseScores(url && url !== "Unknown site" ? url : undefined);
+  } = useLighthouseScores(url && url !== "Unknown site" ? url : "");
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -112,14 +112,32 @@ export default function ResultsPage(): React.JSX.Element {
               <p className="text-red-600">Error: {scoreError}</p>
             ) : scores ? (
               <div className="flex flex-wrap justify-center gap-4">
-                <div className="bg-white text-purple-700 px-4 py-2 rounded-lg shadow">
+                <div
+                  className={`px-6 py-3 rounded-xl shadow-lg text-lg font-bold transition ${
+                    scores.performance > 90
+                      ? "bg-green-100 text-green-800 animate-pulse"
+                      : "bg-white text-purple-700"
+                  }`}
+                >
                   Performance: <AnimatedCounter to={scores.performance} />
                 </div>
-                <div className="bg-white text-purple-700 px-4 py-2 rounded-lg shadow">
+                <div
+                  className={`px-6 py-3 rounded-xl shadow-lg text-lg font-bold transition ${
+                    scores.accessibility > 90
+                      ? "bg-green-100 text-green-800 animate-pulse"
+                      : "bg-white text-purple-700"
+                  }`}
+                >
                   Accessibility: <AnimatedCounter to={scores.accessibility} />
                 </div>
-                <div className="bg-white text-purple-700 px-4 py-2 rounded-lg shadow">
-                  SEO: <AnimatedCounter to={scores.seo} />{" "}
+                <div
+                  className={`px-6 py-3 rounded-xl shadow-lg text-lg font-bold transition ${
+                    scores.seo > 90
+                      ? "bg-green-100 text-green-800 animate-pulse"
+                      : "bg-white text-purple-700"
+                  }`}
+                >
+                  SEO: <AnimatedCounter to={scores.seo} />
                 </div>
               </div>
             ) : null}
