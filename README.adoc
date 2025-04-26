@@ -16,7 +16,7 @@ Demonstrate technical excellence in React, Next.js App Router, and performance-o
 
 Empower developers to uncover opportunities for better web experiences.
 
-Build a project that uses real-world audits and invites exploration, not prescription.
+Build a project that uses real-world audits and invites exploration.
 
 == Architecture Overview
 
