@@ -73,6 +73,13 @@ Designs that respect user choice and motion preferences (in-progress)
 
 Storytelling that celebrates curiosity, agency, and clarity
 
+== Audit Results
+
+image::https://img.shields.io/badge/Lighthouse-100%20Performance,%20Accessibility,%20Best%20Practices,%20SEO-brightgreen.svg?style=flat-square&logo=lighthouse&labelColor=202124[Accessibly Yours Lighthouse Score Badge]
+
+*All categories scored 100 in latest Lighthouse audit (FCP: 0.3s, LCP: 0.5s, CLS: 0, TBT: 10ms).*
+
+
 == Gotchas / Notes
 
 Tailwind CSS SSR hydration is needed; thus, GitHub Pages was not viable.
