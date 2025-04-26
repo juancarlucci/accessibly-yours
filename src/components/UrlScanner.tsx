@@ -19,7 +19,7 @@ export default function UrlScanner({
 
   // Only fetch Lighthouse scores if a valid URL is entered
   const { scores, loading, error } = useLighthouseScores(
-    url && url !== "Unknown site" ? url : undefined
+    url && url !== "Unknown site" ? url : null
   );
 
   const handleSubmit = (e: React.FormEvent) => {
