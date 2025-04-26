@@ -6,7 +6,11 @@ import { useLighthouseScores } from "@/hooks/useLighthouseScores";
 import Link from "next/link";
 import { RefObject } from "react";
 
-function ScannYours({ inputRef }: { inputRef?: RefObject<HTMLInputElement> }) {
+interface ScannYoursProps {
+  inputRef?: RefObject<HTMLInputElement | null>;
+}
+
+function ScannYours({ inputRef }: ScannYoursProps) {
   const [scannedUrl, setScannedUrl] = useState<string | null>(null);
   const { scores, loading, error } = useLighthouseScores(
     scannedUrl ?? "https://accessibly-yours.vercel.app"
