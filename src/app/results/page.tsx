@@ -5,9 +5,9 @@ import IssueCard, { Issue } from "@/components/IssueCard";
 import Controls from "@/components/Controls";
 import ExportButtons from "@/components/ExportButtons";
 import Link from "next/link";
-import { useLighthouseScores } from "@/hooks/useLighthouseScores";
+// import { useLighthouseScores } from "@/hooks/useLighthouseScores";
 import { getFromCache } from "@/utils/cache";
-import SiteQualitySnapshot from "@/components/SiteQualitySnapshot";
+// import SiteQualitySnapshot from "@/components/SiteQualitySnapshot";
 
 export default function ResultsPage(): React.JSX.Element {
   const [url, setUrl] = useState<string>("");
@@ -17,11 +17,11 @@ export default function ResultsPage(): React.JSX.Element {
   const [selectedImpact, setSelectedImpact] = useState<string>("all");
   const [searchTerm, setSearchTerm] = useState<string>("");
 
-  const {
-    scores,
-    loading: loadingScores,
-    error: scoreError,
-  } = useLighthouseScores(url && url !== "Unknown site" ? url : "");
+  // const {
+  //   scores,
+  //   loading: loadingScores,
+  //   error: scoreError,
+  // } = useLighthouseScores(url && url !== "Unknown site" ? url : "");
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -110,12 +110,12 @@ export default function ResultsPage(): React.JSX.Element {
           </Link>
         </div>
 
-        {/* Site Quality Snapshot */}
+        {/* Site Quality Snapshot
         <SiteQualitySnapshot
           scores={scores}
           loading={loadingScores}
           error={scoreError}
-        />
+        /> */}
 
         <div className="bg-white shadow-2xl rounded-3xl p-10">
           {urlError ? (

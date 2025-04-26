@@ -15,6 +15,9 @@ export function useLighthouseScores(siteUrl: string | null) {
   useEffect(() => {
     if (!siteUrl) return;
 
+    // TEMP DISABLE
+    console.log("[Lighthouse] Skipping fetch for now.");
+    return;
     async function fetchScores() {
       setLoading(true);
       setError(null);
