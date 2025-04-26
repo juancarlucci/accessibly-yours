@@ -2,17 +2,25 @@
 
 import { useState, useRef, type RefObject } from "react";
 import { useRouter } from "next/navigation";
+import { useLighthouseScores } from "@/hooks/useLighthouseScores";
 
 interface UrlScannerProps {
   inputRef?: RefObject<HTMLInputElement | null>;
+  onScanSuccess?: (url: string) => void;
 }
 
 export default function UrlScanner({
   inputRef,
+  onScanSuccess,
 }: UrlScannerProps): React.JSX.Element {
   const [url, setUrl] = useState("");
   const router = useRouter();
   const localRef = useRef<HTMLInputElement>(null);
+
+  // Only fetch Lighthouse scores if a valid URL is entered
+  const { scores, loading, error } = useLighthouseScores(
+    url && url !== "Unknown site" ? url : undefined
+  );
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -20,6 +28,7 @@ export default function UrlScanner({
     if (url) {
       const encodedUrl = encodeURIComponent(url);
       router.push(`/results?site=${encodedUrl}`);
+      onScanSuccess?.(url);
     }
   };
 
@@ -41,7 +50,7 @@ export default function UrlScanner({
         placeholder="https://example.com"
         value={url}
         onChange={(e) => setUrl(e.target.value)}
-        ref={inputRef ?? localRef} // * Use external ref if provided
+        ref={inputRef ?? localRef}
         className="w-full p-3 rounded-lg text-black border border-gray-300 mb-4"
       />
       <button
@@ -50,6 +59,32 @@ export default function UrlScanner({
       >
         🚀 Scan Now
       </button>
+
+      {/* Lighthouse Scores (optional preview before redirect) */}
+      {url && (
+        <div className="text-center mt-8">
+          <h3 className="text-white text-xl font-semibold mb-4">
+            Site Quality Snapshot
+          </h3>
+          {loading ? (
+            <p className="text-white">Fetching scores...</p>
+          ) : error ? (
+            <p className="text-red-300">Error: {error}</p>
+          ) : scores ? (
+            <div className="flex flex-wrap justify-center gap-4">
+              <div className="bg-white text-purple-700 px-4 py-2 rounded-lg shadow">
+                Performance: {scores.performance}%
+              </div>
+              <div className="bg-white text-purple-700 px-4 py-2 rounded-lg shadow">
+                Accessibility: {scores.accessibility}%
+              </div>
+              <div className="bg-white text-purple-700 px-4 py-2 rounded-lg shadow">
+                SEO: {scores.seo}%
+              </div>
+            </div>
+          ) : null}
+        </div>
+      )}
     </form>
   );
 }
