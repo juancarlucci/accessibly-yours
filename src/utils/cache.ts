@@ -5,12 +5,16 @@ export function getFromCache<T>(key: string, maxAgeDays: number): T | null {
   if (!cached) return null;
 
   try {
-    const parsed = JSON.parse(cached);
+    const parsed = JSON.parse(cached) as { data: T; timestamp: number };
+    if (!parsed.data || !parsed.timestamp) {
+      return null; // In case of invalid shape
+    }
+
     const ageMs = Date.now() - parsed.timestamp;
     const ageDays = ageMs / (1000 * 60 * 60 * 24);
 
     if (ageDays < maxAgeDays) {
-      return parsed.data as T;
+      return parsed.data;
     } else {
       console.log(`[Cache Expired] ${key}`);
       return null;
