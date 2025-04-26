@@ -12,9 +12,7 @@ interface ScannYoursProps {
 
 function ScannYours({ inputRef }: ScannYoursProps) {
   const [scannedUrl, setScannedUrl] = useState<string | null>(null);
-  const { scores, loading, error } = useLighthouseScores(
-    scannedUrl ?? "https://accessibly-yours.vercel.app"
-  );
+  useLighthouseScores(scannedUrl ?? "https://accessibly-yours.vercel.app");
 
   return (
     <section className="min-h-[100vh] bg-white text-gray-800 py-20 px-6 text-center">
