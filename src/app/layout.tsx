@@ -12,7 +12,15 @@ import { ReactNode } from "react";
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body className="flex flex-col min-h-screen">
+        <main className="flex-grow">{children}</main>
+        <footer className="text-center text-sm text-white py-10">
+          Built by Juan Carlos Collins •{" "}
+          <span className="inline-block mt-1 sm:mt-0 sm:ml-1">
+            🚀 100% Lighthouse: Performance, Accessibility, SEO, Best Practices
+          </span>
+        </footer>
+      </body>
     </html>
   );
 }
