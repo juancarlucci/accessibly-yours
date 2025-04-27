@@ -72,7 +72,9 @@ Accessibly Yours combines modern frontend architecture with real-time audit engi
 === Hosting & Deployment
 
 Frontend: Deployed on Vercel for fast delivery of static and dynamic content using Next.js App Router.
+
 Backend: Hosted on Fly.io inside a Docker container running Node.js + Puppeteer (Chromium headless browser) to execute real audits.
+
 Split design ensures:
 
 🧠 Fast static site delivery for public-facing pages (Home, Demo).
@@ -81,37 +83,45 @@ Split design ensures:
 === Data Flow
 
 User action: scan site URL
+
 ↓
+
 Next.js page loads instantly (hydrated by React)
+
 ↓
+
 Client-side fetches:
   - Fetch WCAG issues from Fly.io backend
   - Fetch Lighthouse scores from Vercel API route
+
 ↓
+
 Results animated and displayed dynamically
+
 ↓
+
 Optional: Export to CSV/JSON
 
 Both audits are performed after page load using Client-Side Rendering (CSR) to ensure snappy UX.
 
 === Key Technologies
 
-Next.js (Static Generation + Client-Side Fetching)
-Fly.io (Custom Node.js server for headless browser auditing)
-Vercel (Frontend + lightweight API routing)
-Puppeteer + pa11y (Accessibility audits inside real Chrome sessions)
-Google Pagespeed API (External Lighthouse performance audits)
-Framer Motion (Smooth React animations)
-Tailwind CSS (Responsive, accessible UI styling)
-localStorage caching (WCAG and Lighthouse results are cached with auto-expiry to improve reload speed)
+- Next.js (Static Generation + Client-Side Fetching)
+- Fly.io (Custom Node.js server for headless browser auditing)
+- Vercel (Frontend + lightweight API routing)
+- Puppeteer + pa11y (Accessibility audits inside real Chrome sessions)
+- Google Pagespeed API (External Lighthouse performance audits)
+- Framer Motion (Smooth React animations)
+- Tailwind CSS (Responsive, accessible UI styling)
+- localStorage caching (WCAG and Lighthouse results are cached with auto-expiry to improve reload speed)
 
 === Terms Explained
 
-Static Generation (SSG): Pages built once during deploy (e.g., Home, Demo).
-Client-Side Fetching (CSR): Fetch dynamic data after the user loads the page (e.g., Results Page).
-Hydration: React attaching event listeners and state to pre-rendered HTML.
-Headless Chromium: Chrome running without a GUI to allow automated accessibility testing.
-Docker Container: Packages app + Chrome + Node.js together for smooth deployment to Fly.io.
+- Static Generation (SSG): Pages built once during deploy (e.g., Home, Demo).
+- Client-Side Fetching (CSR): Fetch dynamic data after the user loads the page (e.g., Results Page).
+- Hydration: React attaching event listeners and state to pre-rendered HTML.
+- Headless Chromium: Chrome running without a GUI to allow automated accessibility testing.
+- Docker Container: Packages app + Chrome + Node.js together for smooth deployment to Fly.io.
 
 == Setup & Development
 
