@@ -1,8 +1,6 @@
 "use client";
 
 import UrlScanner from "./UrlScanner";
-import { useState } from "react";
-import { useLighthouseScores } from "@/hooks/useLighthouseScores";
 import Link from "next/link";
 import { RefObject } from "react";
 
@@ -11,9 +9,6 @@ interface ScannYoursProps {
 }
 
 function ScannYours({ inputRef }: ScannYoursProps) {
-  const [scannedUrl, setScannedUrl] = useState<string | null>(null);
-  useLighthouseScores(scannedUrl ?? "https://accessibly-yours.vercel.app");
-
   return (
     <section className="min-h-[100vh] bg-white text-gray-800 py-20 px-6 text-center">
       <h2 className="text-3xl md:text-5xl font-bold mb-4">
@@ -28,10 +23,7 @@ function ScannYours({ inputRef }: ScannYoursProps) {
       </p>
 
       <div className="max-w-xl mx-auto mb-16">
-        <UrlScanner
-          inputRef={inputRef}
-          onScanSuccess={(url) => setScannedUrl(url)}
-        />
+        <UrlScanner inputRef={inputRef} />
       </div>
 
       <p className="text-base font-medium text-gray-500 mt-16 mb-4">

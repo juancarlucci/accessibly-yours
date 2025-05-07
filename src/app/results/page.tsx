@@ -5,9 +5,7 @@ import IssueCard, { Issue } from "@/components/IssueCard";
 import Controls from "@/components/Controls";
 import ExportButtons from "@/components/ExportButtons";
 import Link from "next/link";
-// import { useLighthouseScores } from "@/hooks/useLighthouseScores";
 import { getFromCache } from "@/utils/cache";
-// import SiteQualitySnapshot from "@/components/SiteQualitySnapshot";
 
 export default function ResultsPage(): React.JSX.Element {
   const [url, setUrl] = useState<string>("");
@@ -16,12 +14,6 @@ export default function ResultsPage(): React.JSX.Element {
   const [urlError, setUrlError] = useState<string | null>(null);
   const [selectedImpact, setSelectedImpact] = useState<string>("all");
   const [searchTerm, setSearchTerm] = useState<string>("");
-
-  // const {
-  //   scores,
-  //   loading: loadingScores,
-  //   error: scoreError,
-  // } = useLighthouseScores(url && url !== "Unknown site" ? url : "");
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -35,8 +27,7 @@ export default function ResultsPage(): React.JSX.Element {
 
     setUrl(site);
 
-    // 1. Check localStorage for cached WCAG audit results
-    // ✅ Check localStorage for cached WCAG audit with expiry
+    //* Check localStorage for cached WCAG audit with expiry
     const cachedIssues = getFromCache<Issue[]>(`pa11y-${site}`, 5);
     if (cachedIssues) {
       console.log("Loaded WCAG audit from cache");
@@ -44,7 +35,7 @@ export default function ResultsPage(): React.JSX.Element {
       setLoading(false);
       return;
     }
-    // 2. If not cached, fetch audit
+    //* 2. If not cached, fetch audit
     async function fetchData() {
       try {
         const result = await fetch(
@@ -63,7 +54,7 @@ export default function ResultsPage(): React.JSX.Element {
         const issues = Array.isArray(jsonData.issues) ? jsonData.issues : [];
         setIssues(issues);
 
-        // ✅ Save to cache with timestamp
+        //* Save to cache with timestamp
         const now = Date.now();
         localStorage.setItem(
           `pa11y-${site}`,
@@ -109,19 +100,39 @@ export default function ResultsPage(): React.JSX.Element {
             ← Back to Home
           </Link>
         </div>
-
-        {/* Site Quality Snapshot
-        <SiteQualitySnapshot
-          scores={scores}
-          loading={loadingScores}
-          error={scoreError}
-        /> */}
-
         <div className="bg-white shadow-2xl rounded-3xl p-10">
           {urlError ? (
             <p className="text-red-600 font-semibold text-center">{urlError}</p>
           ) : loading ? (
-            <p className="text-gray-500 text-center">Loading results...</p>
+            <div className="text-center flex flex-col items-center gap-6 text-purple-700">
+              <svg
+                className="animate-spin h-12 w-12 text-purple-500"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                ></circle>
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8v8H4z"
+                ></path>
+              </svg>
+              <p className="text-lg font-medium">
+                Running accessibility audit for <strong>{url}</strong>...
+              </p>
+              <p className="text-sm text-gray-600 max-w-md">
+                This real-time audit uses a headless browser to simulate user
+                interaction and may take up to 45 seconds.
+              </p>
+            </div>
           ) : issues && issues.length > 0 ? (
             <>
               <div className="mb-8">

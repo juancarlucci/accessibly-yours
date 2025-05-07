@@ -2,23 +2,17 @@
 
 import { useState, useRef, type RefObject } from "react";
 import { useRouter } from "next/navigation";
-import { useLighthouseScores } from "@/hooks/useLighthouseScores";
 
 interface UrlScannerProps {
   inputRef?: RefObject<HTMLInputElement | null>;
-  onScanSuccess?: (url: string) => void;
 }
 
 export default function UrlScanner({
   inputRef,
-  onScanSuccess,
 }: UrlScannerProps): React.JSX.Element {
   const [url, setUrl] = useState("");
   const router = useRouter();
   const localRef = useRef<HTMLInputElement>(null);
-
-  // Only fetch Lighthouse scores if a valid URL is entered
-  useLighthouseScores(url && url !== "Unknown site" ? url : null);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -26,7 +20,6 @@ export default function UrlScanner({
     if (url) {
       const encodedUrl = encodeURIComponent(url);
       router.push(`/results?site=${encodedUrl}`);
-      onScanSuccess?.(url);
     }
   };
 

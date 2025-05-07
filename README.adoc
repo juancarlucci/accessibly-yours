@@ -45,11 +45,6 @@ image::public/screenshots/Accessibly-Yours-Scanner.png[Audit Results Screenshot,
 
 Scan any public website to uncover accessibility insights and opportunities.
 
-== Site Quality Snapshot
-
-image::public/screenshots/Accessibly-Yours-Snapshot.png[Site Quality Snapshot, width=700]
-
-Get an instant visual overview of your site's quality scores with animated counters and smart caching.
 
 == Key Features
 
@@ -78,7 +73,7 @@ Backend: Hosted on Fly.io inside a Docker container running Node.js + Puppeteer 
 Split design ensures:
 
 🧠 Fast static site delivery for public-facing pages (Home, Demo).
-⚡ Dynamic real-time data fetches (WCAG + Lighthouse) on demand without slowing down initial loads.
+⚡ Dynamic real-time data fetches (WCAG) on demand without slowing down initial loads.
 
 === Data Flow
 
@@ -92,7 +87,6 @@ Next.js page loads instantly (hydrated by React)
 
 Client-side fetches:
   - Fetch WCAG issues from Fly.io backend
-  - Fetch Lighthouse scores from Vercel API route
 
 ↓
 
@@ -102,6 +96,7 @@ Results animated and displayed dynamically
 
 Optional: Export to CSV/JSON
 
+
 Both audits are performed after page load using Client-Side Rendering (CSR) to ensure snappy UX.
 
 === Key Technologies
@@ -110,10 +105,9 @@ Both audits are performed after page load using Client-Side Rendering (CSR) to e
 - Fly.io (Custom Node.js server for headless browser auditing)
 - Vercel (Frontend + lightweight API routing)
 - Puppeteer + pa11y (Accessibility audits inside real Chrome sessions)
-- Google Pagespeed API (External Lighthouse performance audits)
 - Framer Motion (Smooth React animations)
 - Tailwind CSS (Responsive, accessible UI styling)
-- localStorage caching (WCAG and Lighthouse results are cached with auto-expiry to improve reload speed)
+- localStorage caching (WCAG results are cached with auto-expiry to improve reload speed)
 
 === Terms Explained
 
@@ -151,14 +145,12 @@ image::https://img.shields.io/badge/Lighthouse-100%20Performance,%20Accessibilit
 
 - 🚀 **Smart Local Storage Caching**:
   - WCAG/pa11y audit results are cached per URL.
-  - Lighthouse Site Quality scores are also cached per URL.
   - Reduces network calls, improves reload speeds dramatically.
 
 == Gotchas / Notes
 
 - Tailwind CSS SSR hydration is needed; thus, GitHub Pages was not viable.
 - All audits are proxied through the Fly.io backend to enable headless browsing.
-- This app emphasizes exploration rather than enforcement of standards.
 
 == Future Enhancements
 
