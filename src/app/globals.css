@@ -2,27 +2,57 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-/* Remove @theme inline block as it's not needed with Tailwind */
-@media (prefers-color-scheme: dark) {
+@layer base {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: theme("colors.white");
+    --text: theme("colors.gray.900");
+  }
+
+  .dark {
+    --background: theme("colors.gray.900");
+    --text: theme("colors.white");
+  }
+
+  html {
+    @apply antialiased;
+  }
+
+  body {
+    background-color: var(--background);
+    color: var(--text);
+    @apply transition-colors duration-200;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
-}
-
 @layer components {
-  .readable-width {
-    @apply max-w-[65ch] w-full mx-auto;
+  .themed-bg {
+    background-color: var(--background);
+    color: var(--text);
+  }
+
+  .btn {
+    @apply px-3 py-1 rounded text-sm font-medium transition duration-200 shadow-sm hover:shadow-md;
+  }
+  .btn-subtle {
+    @apply bg-white text-gray-700 border border-gray-300 hover:bg-gray-100;
+    @apply dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700;
+  }
+
+  .btn-active {
+    @apply bg-purple-100 text-purple-700 border border-purple-300;
+    @apply dark:bg-purple-950 dark:text-purple-200 dark:border-purple-600;
+  }
+
+  .btn-primary {
+    @apply bg-white text-purple-700 hover:bg-purple-600 hover:text-white;
+  }
+  .btn-secondary {
+    @apply bg-gray-600 text-white hover:bg-gray-700;
+    @apply dark:bg-gray-700 dark:hover:bg-gray-600;
+  }
+
+  .card {
+    @apply rounded-lg shadow border p-4;
+    @apply border-gray-200 dark:border-gray-700;
   }
 }
