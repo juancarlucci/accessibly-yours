@@ -39,16 +39,10 @@ export default function ExportButtons({
 
   return (
     <div className="flex gap-2 mb-4">
-      <button
-        onClick={handleDownloadCSV}
-        className="px-3 py-1 rounded bg-purple-600 text-white hover:bg-purple-700 text-sm"
-      >
+      <button onClick={handleDownloadCSV} className="btn btn-primary">
         Export CSV
       </button>
-      <button
-        onClick={handleDownloadJSON}
-        className="px-3 py-1 rounded bg-gray-600 text-white hover:bg-gray-700 text-sm"
-      >
+      <button onClick={handleDownloadJSON} className="btn btn-subtle">
         Export JSON
       </button>
     </div>

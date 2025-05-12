@@ -14,9 +14,9 @@ export default function Controls({
   setSearchTerm,
 }: ControlsProps): React.JSX.Element {
   return (
-    <div className="flex flex-col md:flex-row md:items-center gap-4">
+    <div className="card p-4 shadow-md mb-6 flex flex-col md:flex-row md:items-center gap-4">
       <select
-        className="border rounded px-3 py-2"
+        className="btn border rounded px-3 py-2"
         value={selectedImpact}
         onChange={(e) => setSelectedImpact(e.target.value)}
       >

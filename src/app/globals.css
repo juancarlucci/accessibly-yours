@@ -55,4 +55,10 @@
     @apply rounded-lg shadow border p-4;
     @apply border-gray-200 dark:border-gray-700;
   }
+
+  .nav-fixed {
+    @apply w-full fixed top-0 left-0 z-50 backdrop-blur border-b;
+    @apply bg-white/80 dark:bg-gray-900/80;
+    @apply border-gray-200 dark:border-gray-800;
+  }
 }

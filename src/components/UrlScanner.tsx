@@ -46,7 +46,7 @@ export default function UrlScanner({
       />
       <button
         type="submit"
-        className="bg-white text-black py-2 px-6 rounded-lg transition font-semibold hover:bg-purple-700 hover:text-white"
+        className="bg-white text-purple-700 py-2 px-6 rounded-lg font-semibold transition duration-200 hover:bg-purple-600 hover:text-white shadow-sm hover:shadow-md"
       >
         🚀 Scan Now
       </button>

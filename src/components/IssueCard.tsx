@@ -1,5 +1,3 @@
-import React from "react";
-
 // Define the Issue interface
 export interface Issue {
   id: string;
@@ -18,36 +16,24 @@ interface IssueCardProps {
 export default function IssueCard({
   issue,
 }: IssueCardProps): React.JSX.Element {
-  // * Map impact level to color classes
-  const colors = {
-    minor: "text-yellow-700 border-yellow-700",
-    moderate: "text-orange-700 border-orange-700",
-    serious: "text-red-700 border-red-700",
-    critical: "text-purple-700 border-purple-700",
-    undefined: "text-gray-700 border-gray-700",
-  };
-
-  const badgeStyle =
-    colors[issue.impact as keyof typeof colors] ||
-    "text-gray-700 border-gray-700";
+  const impact = (issue.impact?.toLowerCase() || "undefined") as
+    | "minor"
+    | "moderate"
+    | "serious"
+    | "critical"
+    | "undefined";
 
   return (
-    <article
-      className={`rounded-lg bg-white p-4 shadow-sm transition hover:shadow-md overflow-hidden border-l-4 ${badgeStyle}`}
-    >
+    <article className="themed-bg card">
       <header className="mb-1">
-        <h2 className="text-lg font-semibold text-purple-700 break-all whitespace-pre-wrap max-w-full">
+        <h2
+          className={`text-lg font-semibold break-all whitespace-pre-wrap max-w-full`}
+        >
           {issue.message}
         </h2>
-        {issue.impact && (
-          <span
-            className={`inline-block mt-1 px-2 py-1 text-xs font-medium rounded bg-gray-100 ${badgeStyle}`}
-          >
-            {issue.impact}
-          </span>
-        )}
+        {issue.impact && <span className="">{issue.impact}</span>}
       </header>
-      <p className="text-sm text-gray-700 mb-2 whitespace-pre-wrap">
+      <p className="text-sm text-gray-700 dark:text-gray-200 mb-2 whitespace-pre-wrap">
         {issue.code}
       </p>
 
@@ -57,12 +43,12 @@ export default function IssueCard({
         }
         target="_blank"
         rel="noopener noreferrer"
-        className="text-sm text-blue-600 underline hover:text-blue-800"
+        className="text-sm text-blue-600 dark:text-blue-400 underline hover:text-blue-800 dark:hover:text-blue-300"
       >
         Learn more
       </a>
 
-      <div className="mt-2 text-xs text-gray-500 break-all">
+      <div className="mt-2 text-xs text-gray-500 dark:text-gray-400 break-all">
         <strong>Selector:</strong> {issue.selector}
       </div>
     </article>

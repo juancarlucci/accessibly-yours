@@ -1,10 +1,9 @@
-// src/pages/demo.tsx
 "use client";
-
 import React, { useState, useMemo } from "react";
-import IssueCard, { Issue } from "@/components/IssueCard";
-import Controls from "@/components/Controls";
 import Link from "next/link";
+import Controls from "@/components/Controls";
+import IssueCard, { Issue } from "@/components/IssueCard";
+import clsx from "clsx";
 
 export default function DemoResultsPage(): React.JSX.Element {
   const [selectedImpact, setSelectedImpact] = useState("all");
@@ -71,33 +70,14 @@ export default function DemoResultsPage(): React.JSX.Element {
 
   const filteredIssues = useMemo(() => {
     const dataset = uiState === "normal" ? allIssues : [];
-    return dataset.filter((issue) => {
-      const matchesImpact =
-        selectedImpact === "all" || issue.impact === selectedImpact;
-      const matchesSearch =
-        issue.code.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        issue.message.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        issue.selector.toLowerCase().includes(searchTerm.toLowerCase());
-      return matchesImpact && matchesSearch;
-    });
-  }, [allIssues, selectedImpact, searchTerm, uiState]);
-
-  function handleDownloadCSV() {
-    if (!filteredIssues.length) return;
-    const header = Object.keys(filteredIssues[0]).join(",");
-    const rows = filteredIssues.map((issue) =>
-      Object.values(issue)
-        .map((val) => `"${String(val).replace(/"/g, '""')}"`)
-        .join(",")
+    return dataset.filter(
+      (issue) =>
+        (selectedImpact === "all" || issue.impact === selectedImpact) &&
+        [issue.code, issue.message, issue.selector].some((text) =>
+          text.toLowerCase().includes(searchTerm.toLowerCase())
+        )
     );
-    const csv = [header, ...rows].join("\n");
-    downloadFile("issues.csv", csv);
-  }
-
-  function handleDownloadJSON() {
-    const json = JSON.stringify(filteredIssues, null, 2);
-    downloadFile("issues.json", json);
-  }
+  }, [allIssues, selectedImpact, searchTerm, uiState]);
 
   function downloadFile(filename: string, content: string) {
     const blob = new Blob([content], { type: "text/plain" });
@@ -109,79 +89,69 @@ export default function DemoResultsPage(): React.JSX.Element {
   }
 
   return (
-    <main className="bg-gray-50 text-gray-800 px-6 py-16 min-h-screen">
-      {/* Back to Home Button */}
+    <main className="themed-bg px-6 py-16 pt-24">
       <div className="mb-6">
         <Link href="/">
-          <button className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition text-sm">
-            ← Back to Home
-          </button>
+          <button className="btn btn-subtle">← Back to Home</button>
         </Link>
       </div>
 
-      <h1 className="text-4xl font-bold text-purple-700 mb-4">
+      <h1 className="text-4xl font-bold text-purple-700 dark:text-purple-300 mb-4">
         🧪 Explore Accessibility Issues Your Way
       </h1>
-      <p className="text-lg text-gray-600 mb-6 max-w-2xl">
+      <p className="text-lg mb-6 max-w-2xl">
         Dive into a sample scan and discover how small changes can make a big
         impact—filter, export, and learn at your own pace.
       </p>
 
-      {/* UI State Toggle Buttons */}
       <div className="mb-6 flex gap-2 flex-wrap">
         {["normal", "empty", "loading", "error"].map((state) => (
           <button
             key={state}
             onClick={() => setUiState(state as typeof uiState)}
-            className={`px-3 py-1 rounded text-sm border transition ${
-              uiState === state
-                ? "bg-purple-100 text-purple-700 border-purple-300"
-                : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100"
-            }`}
+            className={clsx(
+              uiState === state ? "btn btn-active" : "btn btn-subtle"
+            )}
           >
             {state}
           </button>
         ))}
       </div>
 
-      {/* Export Buttons */}
       <div className="flex gap-2 mb-4">
         <button
-          onClick={handleDownloadCSV}
-          className="px-3 py-1 rounded bg-purple-600 text-white hover:bg-purple-700 text-sm"
+          onClick={() => downloadFile("issues.csv", toCSV(filteredIssues))}
+          className="btn btn-primary"
         >
           Export CSV
         </button>
         <button
-          onClick={handleDownloadJSON}
-          className="px-3 py-1 rounded bg-gray-600 text-white hover:bg-gray-700 text-sm"
+          onClick={() => downloadFile("issues.json", toJSON(filteredIssues))}
+          className="btn btn-secondary"
         >
           Export JSON
         </button>
       </div>
 
       <div className="mb-6">
-        <p className="text-sm text-gray-600 mb-2">
+        <p className="text-sm mb-2">
           <strong>Severity legend:</strong>
         </p>
-        <ul className="text-sm text-gray-600 list-disc list-inside mb-4">
-          <li className="[&::marker]:text-purple-700">
-            <strong>Critical:</strong> Major blockers (e.g., no alt text, no
-            keyboard access)
+        <ul className="text-sm list-disc list-inside mb-4">
+          <li className="[&::marker]:text-purple-700 dark:[&::marker]:text-purple-300">
+            <strong>Critical:</strong> Major blockers (e.g., no alt text)
           </li>
-          <li className="[&::marker]:text-red-700">
-            <strong>Serious:</strong> Severe usability issues (e.g., missing
-            labels)
+          <li className="[&::marker]:text-red-700 dark:[&::marker]:text-red-400">
+            <strong>Serious:</strong> Severe usability issues
           </li>
-          <li className="[&::marker]:text-orange-700">
-            <strong>Moderate:</strong> Impacts some users (e.g., contrast
-            issues)
+          <li className="[&::marker]:text-orange-700 dark:[&::marker]:text-orange-400">
+            <strong>Moderate:</strong> Contrast or grouping issues
           </li>
-          <li className="[&::marker]:text-yellow-700">
-            <strong>Minor:</strong> Small enhancements (e.g., link clarity)
+          <li className="[&::marker]:text-yellow-700 dark:[&::marker]:text-yellow-300">
+            <strong>Minor:</strong> Link clarity, alt extras
           </li>
-          <li className="[&::marker]:text-gray-700">
-            <strong>Undefined:</strong> Issue doesn’t have a severity assigned
+          <li className="[&::marker]:text-gray-700 dark:[&::marker]:text-gray-400">
+            <strong>Undefined:</strong> Custom or unknown checks
           </li>
         </ul>
 
@@ -193,9 +163,8 @@ export default function DemoResultsPage(): React.JSX.Element {
         />
       </div>
 
-      {/* Loading/Error/Empty States */}
       {uiState === "loading" ? (
-        <p className="text-gray-500">🔄 Loading simulated results...</p>
+        <p>🔄 Loading simulated results...</p>
       ) : uiState === "error" ? (
         <p className="text-red-600 font-semibold">
           ❌ Simulated error fetching issues. Please try again.
@@ -213,4 +182,19 @@ export default function DemoResultsPage(): React.JSX.Element {
       )}
     </main>
   );
+
+  function toCSV(data: Issue[]): string {
+    if (!data.length) return "";
+    const header = Object.keys(data[0]).join(",");
+    const rows = data.map((issue) =>
+      Object.values(issue)
+        .map((val) => `"${String(val).replace(/"/g, '""')}"`)
+        .join(",")
+    );
+    return [header, ...rows].join("\n");
+  }
+
+  function toJSON(data: Issue[]): string {
+    return JSON.stringify(data, null, 2);
+  }
 }

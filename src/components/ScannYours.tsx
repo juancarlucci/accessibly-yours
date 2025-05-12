@@ -10,7 +10,7 @@ interface ScannYoursProps {
 
 function ScannYours({ inputRef }: ScannYoursProps) {
   return (
-    <section className="min-h-[100vh] bg-white text-gray-800 py-20 px-6 text-center">
+    <section className="pt-32 px-6 text-center">
       <h2 className="text-3xl md:text-5xl font-bold mb-4">
         See Accessibility Through Your Eyes
       </h2>
@@ -26,17 +26,25 @@ function ScannYours({ inputRef }: ScannYoursProps) {
         <UrlScanner inputRef={inputRef} />
       </div>
 
-      <p className="text-base font-medium text-gray-500 mt-16 mb-4">
-        Just curious?
-      </p>
+      <p className="text-base font-medium mt-16 mb-4">Just curious?</p>
       <Link href="/demo">
-        <button className="px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition text-lg font-medium">
+        <button className="btn btn-primary text-lg font-medium">
           Try the Demo Now
         </button>
       </Link>
-      <p className="text-sm text-gray-600 mt-4 max-w-2xl mx-auto">
+      <p className="text-md mt-4 max-w-2xl mx-auto">
         Our demo lets you explore a sample scan and see the impact of
         accessibility fixes.
+      </p>
+
+      <p className="text-md mt-8 max-w-2xl mx-auto">
+        Want to learn how this app was built?{" "}
+        <Link
+          href="/about"
+          className="text-purple-500 hover:text-purple-400 font-medium underline hover:text-purple-900"
+        >
+          Read the story behind Accessibly Yours.
+        </Link>
       </p>
     </section>
   );
