@@ -1,5 +1,10 @@
+// app/layout.tsx
+import Footer from "@/components/Footer";
 import "./globals.css";
 import type { Metadata } from "next";
+import { ReactNode } from "react";
+import TopNav from "@/components/TopNav";
+import { Suspense } from 'react';
 
 export const metadata: Metadata = {
   title: "Accessibly Yours - Web Accessibility Scanner",
@@ -7,19 +12,15 @@ export const metadata: Metadata = {
     "Check your website for accessibility issues and get recommendations for improvements.",
 };
 
-import { ReactNode } from "react";
-
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
       <body className="flex flex-col min-h-screen">
+        <TopNav />
+        <Suspense fallback={<div className="min-h-screen" />}>
         <main className="flex-grow">{children}</main>
-        <footer className="text-center text-sm text-white py-10">
-          Built by Juan Carlos Collins •{" "}
-          <span className="inline-block mt-1 sm:mt-0 sm:ml-1">
-            🚀 100% Lighthouse: Performance, Accessibility, SEO, Best Practices
-          </span>
-        </footer>
+        <Footer />
+        </Suspense>
       </body>
     </html>
   );
