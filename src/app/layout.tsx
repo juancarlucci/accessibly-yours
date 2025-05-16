@@ -15,6 +15,9 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
+      <head>
+        <meta name="description" content="Check your website for accessibility issues and get recommendations for improvements." />
+      </head>
       <body className="flex flex-col min-h-screen">
         <TopNav />
         <Suspense fallback={<div className="min-h-screen" />}>
