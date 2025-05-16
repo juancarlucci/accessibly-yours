@@ -3,7 +3,4 @@ module.exports = {
     tailwindcss: {},
     autoprefixer: {},
   },
-  watchOptions: {
-    poll: true,
-  },
 };
