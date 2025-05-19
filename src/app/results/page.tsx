@@ -7,7 +7,7 @@ import ExportButtons from "@/components/ExportButtons";
 import Link from "next/link";
 import { getFromCache } from "@/utils/cache";
 
-export default function ResultsPage(): React.JSX.Element {
+export default function ResultsPage() {
   const [url, setUrl] = useState<string>("");
   const [issues, setIssues] = useState<Issue[] | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -82,7 +82,7 @@ export default function ResultsPage(): React.JSX.Element {
   });
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-white via-purple-50 to-purple-100 text-gray-800 px-6 py-16">
+    <main className="themed-bg min-h-screen px-6 py-16 pt-24">
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-12">
           <h1 className="text-5xl font-extrabold text-purple-800 mb-4">
@@ -93,14 +93,11 @@ export default function ResultsPage(): React.JSX.Element {
           </p>
         </div>
         <div className="flex justify-center mb-10">
-          <Link
-            href="/"
-            className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-6 rounded-lg transition"
-          >
+          <Link href="/" className="btn-subtle">
             ← Back to Home
           </Link>
         </div>
-        <div className="bg-white shadow-2xl rounded-3xl p-10">
+        <div className="shadow-2xl rounded-3xl p-10">
           {urlError ? (
             <p className="text-red-600 font-semibold text-center">{urlError}</p>
           ) : loading ? (
