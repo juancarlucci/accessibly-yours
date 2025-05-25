@@ -93,7 +93,7 @@ export default function ResultsPage() {
           </p>
         </div>
         <div className="flex justify-center mb-10">
-          <Link href="/" className="btn-subtle">
+          <Link href="/" className="btn btn-secondary px-3 py-2">
             ← Back to Home
           </Link>
         </div>

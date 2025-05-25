@@ -19,15 +19,20 @@ export default function IssueCard({
   issue,
 }: IssueCardProps): React.JSX.Element {
   const impactClass = clsx({
-    'border-yellow-500': issue.impact === 'minor',
-    'border-orange-500': issue.impact === 'moderate',
-    'border-red-500': issue.impact === 'serious',
-    'border-purple-500': issue.impact === 'critical',
-    'border-gray-500': !issue.impact
+    "border-yellow-500": issue.impact === "minor",
+    "border-orange-500": issue.impact === "moderate",
+    "border-red-500": issue.impact === "serious",
+    "border-purple-500": issue.impact === "critical",
+    "border-gray-500": !issue.impact,
   });
 
   return (
-    <article className={`themed-bg card ${impactClass}`}>
+    <article
+      className={clsx(
+        "themed-bg card w-full max-w-full min-w-[150px]",
+        impactClass
+      )}
+    >
       <header className="mb-1">
         <h2
           className={`text-lg font-semibold break-all whitespace-pre-wrap max-w-full`}
@@ -36,7 +41,7 @@ export default function IssueCard({
         </h2>
         {issue.impact && <span className="">{issue.impact}</span>}
       </header>
-      <p className="text-sm text-gray-700 dark:text-gray-200 mb-2 whitespace-pre-wrap">
+      <p className="text-sm text-gray-700 dark:text-gray-200 mb-2 break-words whitespace-pre-wrap">
         {issue.code}
       </p>
 
