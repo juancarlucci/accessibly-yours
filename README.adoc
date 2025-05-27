@@ -6,7 +6,7 @@
 [.lead]
 Built with a microservices mindset — combining blazing-fast static delivery, real-time audit engines, and thoughtful accessibility-first design.
 
-image::public/screenshots/Accessibly-Yours-Home.png[Homepage, width=600]
+image::public/screenshots/Accessibly-Yours-Home-01.webp[Homepage, width=600]
 
 Accessibly Yours is a React + Next.js web app that invites users to explore accessibility with clarity, creativity, and real-time insights. It’s built to showcase best practices in frontend engineering and to spark curiosity about how thoughtful design opens experiences for everyone.
 
@@ -29,7 +29,7 @@ Why this split?
 
 == Homepage Overview
 
-image::public/screenshots/Accessibly-Yours-Home.png[Homepage Screenshot, width=700]
+image::public/screenshots/Accessibly-Yours-Home-01.webp[Homepage Screenshot, width=700]
 
 The entry point for users to start their accessibility journey.
 
