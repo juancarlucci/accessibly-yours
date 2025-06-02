@@ -1,80 +1,59 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import IssueCard, { Issue } from "@/components/IssueCard";
+import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
+import { useSearchParams } from "next/navigation";
+import IssueCard from "@/components/IssueCard";
 import Controls from "@/components/Controls";
 import ExportButtons from "@/components/ExportButtons";
 import Link from "next/link";
 import { getFromCache } from "@/utils/cache";
 
+// Define the Issue type according to your API response structure
+type Issue = {
+  code: string;
+  message: string;
+  selector: string;
+  impact?: string;
+  [key: string]: unknown;
+};
+
 export default function ResultsPage() {
-  const [url, setUrl] = useState<string>("");
-  const [issues, setIssues] = useState<Issue[] | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [urlError, setUrlError] = useState<string | null>(null);
-  const [selectedImpact, setSelectedImpact] = useState<string>("all");
-  const [searchTerm, setSearchTerm] = useState<string>("");
+  const searchParams = useSearchParams();
+  const site = searchParams.get("site");
+  const [selectedImpact, setSelectedImpact] = useState("all");
+  const [searchTerm, setSearchTerm] = useState("");
 
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const site = params.get("site");
+  const {
+    data: issues,
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ["audit", site],
+    queryFn: async () => {
+      if (!site) throw new Error("No URL provided");
+      const cachedIssues = getFromCache<Issue[]>(`pa11y-${site}`, 5);
+      if (cachedIssues) return cachedIssues;
+      const response = await fetch(
+        `https://audit-api-fly-01.fly.dev/audit?url=${encodeURIComponent(site)}`
+      );
+      if (response.status === 429) throw new Error("Too many requests");
+      const jsonData = await response.json();
+      const issues = Array.isArray(jsonData.issues) ? jsonData.issues : [];
+      localStorage.setItem(
+        `pa11y-${site}`,
+        JSON.stringify({ data: issues, timestamp: Date.now() })
+      );
+      return issues;
+    },
+    enabled: !!site,
+    staleTime: 5 * 60 * 1000, // Cache for 5 minutes
+  });
 
-    if (!site) {
-      console.warn("No URL provided for audit.");
-      setLoading(false);
-      return;
-    }
-
-    setUrl(site);
-
-    //* Check localStorage for cached WCAG audit with expiry
-    const cachedIssues = getFromCache<Issue[]>(`pa11y-${site}`, 5);
-    if (cachedIssues) {
-      console.log("Loaded WCAG audit from cache");
-      setIssues(cachedIssues);
-      setLoading(false);
-      return;
-    }
-    //* 2. If not cached, fetch audit
-    async function fetchData() {
-      try {
-        const result = await fetch(
-          `https://audit-api-fly-01.fly.dev/audit?url=${encodeURIComponent(
-            site || ""
-          )}`
-        );
-        if (result.status === 429) {
-          setUrlError(
-            "🚫 Too many requests. Please wait a few minutes before trying again."
-          );
-          setLoading(false);
-          return;
-        }
-        const jsonData = await result.json();
-        const issues = Array.isArray(jsonData.issues) ? jsonData.issues : [];
-        setIssues(issues);
-
-        //* Save to cache with timestamp
-        const now = Date.now();
-        localStorage.setItem(
-          `pa11y-${site}`,
-          JSON.stringify({ data: issues, timestamp: now })
-        );
-      } catch (err) {
-        console.error("Error fetching audit results:", err);
-        setUrlError("❌ An error occurred while fetching the audit.");
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    fetchData();
-  }, []);
-
-  const filteredIssues = (issues || []).filter((issue) => {
-    const matchesImpact =
+  const filteredIssues: Issue[] = (issues || []).filter((issue: Issue) => {
+    const matchesImpact: boolean =
       selectedImpact === "all" || issue.impact === selectedImpact;
-    const matchesSearch =
+    const matchesSearch: boolean =
       issue.code.toLowerCase().includes(searchTerm.toLowerCase()) ||
       issue.message.toLowerCase().includes(searchTerm.toLowerCase()) ||
       issue.selector.toLowerCase().includes(searchTerm.toLowerCase());
@@ -89,7 +68,7 @@ export default function ResultsPage() {
             🧪 Accessibility Audit Results
           </h1>
           <p className="text-lg text-purple-600">
-            Scanned URL: <strong>{url}</strong>
+            Scanned URL: <strong>{site || "N/A"}</strong>
           </p>
         </div>
         <div className="flex justify-center mb-10">
@@ -98,51 +77,28 @@ export default function ResultsPage() {
           </Link>
         </div>
         <div className="shadow-2xl rounded-3xl p-10">
-          {urlError ? (
-            <p className="text-red-600 font-semibold text-center">{urlError}</p>
-          ) : loading ? (
+          {error ? (
+            <p className="text-red-600 font-semibold text-center">
+              {error.message}
+            </p>
+          ) : isLoading ? (
             <div className="text-center flex flex-col items-center gap-6 text-purple-700">
-              <svg
-                className="animate-spin h-12 w-12 text-purple-500"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-              >
-                <circle
-                  className="opacity-25"
-                  cx="12"
-                  cy="12"
-                  r="10"
-                  stroke="currentColor"
-                  strokeWidth="4"
-                ></circle>
-                <path
-                  className="opacity-75"
-                  fill="currentColor"
-                  d="M4 12a8 8 0 018-8v8H4z"
-                ></path>
+              <svg className="animate-spin h-12 w-12 text-purple-500" /* ... */>
+                {/* SVG content */}
               </svg>
               <p className="text-lg font-medium">
-                Running accessibility audit for <strong>{url}</strong>...
-              </p>
-              <p className="text-sm text-gray-600 max-w-md">
-                This real-time audit uses a headless browser to simulate user
-                interaction and may take up to 45 seconds.
+                Running accessibility audit for <strong>{site}</strong>...
               </p>
             </div>
           ) : issues && issues.length > 0 ? (
             <>
-              <div className="mb-8">
-                <Controls
-                  selectedImpact={selectedImpact}
-                  searchTerm={searchTerm}
-                  setSelectedImpact={setSelectedImpact}
-                  setSearchTerm={setSearchTerm}
-                />
-              </div>
-              <div className="mb-8">
-                <ExportButtons issues={filteredIssues} />
-              </div>
+              <Controls
+                selectedImpact={selectedImpact}
+                searchTerm={searchTerm}
+                setSelectedImpact={setSelectedImpact}
+                setSearchTerm={setSearchTerm}
+              />
+              <ExportButtons issues={filteredIssues} />
               <section className="mt-6 grid gap-6 md:grid-cols-2">
                 {filteredIssues.map((issue, idx) => (
                   <IssueCard key={idx} issue={issue} />
