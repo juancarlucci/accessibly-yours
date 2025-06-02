@@ -1,15 +1,16 @@
 import clsx from "clsx";
 
 // Define the Issue interface
-export interface Issue {
+export type Issue = {
   id: string;
-  description: string;
-  helpUrl: string;
-  selector: string;
   code: string;
   message: string;
+  selector: string;
   impact?: string;
-}
+  description: string;
+  helpUrl: string;
+  [key: string]: unknown;
+};
 
 interface IssueCardProps {
   issue: Issue;
