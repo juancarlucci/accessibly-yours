@@ -15,7 +15,7 @@ export default function TopNav() {
           className="flex items-center gap-2 text-xl font-semibold"
         >
           <Image
-            src="/logo.png"
+            src="/logo.webp"
             alt="Accessibly Yours logo"
             width={24}
             height={24}
