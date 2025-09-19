@@ -38,10 +38,10 @@ function ScannYours({ inputRef }: ScannYoursProps) {
       </p>
 
       <p className="text-md mt-8 max-w-2xl mx-auto">
-        Want to learn how this app was built?{" "}
+        Want to learn how this app was built?
         <Link
           href="/about"
-          className="text-purple-500 hover:text-purple-400 font-medium underline hover:text-purple-900"
+          className="text-purple-700 hover:text-purple-400 font-medium underline hover:text-purple-900"
         >
           Read the story behind Accessibly Yours.
         </Link>

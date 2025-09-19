@@ -5,22 +5,14 @@ import HeroSection from "@/components/HeroSection";
 import HeroAccessibilityScene from "@/components/HeroAccessibilityScene";
 import ScannYours from "@/components/ScannYours";
 
-export default function HomePage(): React.JSX.Element {
+export default function HomePage() {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleCallToAction = () => {
-    if (inputRef.current) {
-      const element = inputRef.current;
-      const elementTop = element.getBoundingClientRect().top + window.pageYOffset;
-      const offset = 80;
-      
-      window.scrollTo({
-        top: elementTop - offset,
-        behavior: "smooth"
-      });
-      
-      setTimeout(() => element.focus(), 500);
-    }
+    inputRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    setTimeout(() => {
+      inputRef.current?.focus();
+    }, 500);
   };
   return (
     <>

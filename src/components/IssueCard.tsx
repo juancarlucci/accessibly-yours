@@ -1,3 +1,5 @@
+import clsx from "clsx";
+
 // Define the Issue interface
 export interface Issue {
   id: string;
@@ -16,15 +18,16 @@ interface IssueCardProps {
 export default function IssueCard({
   issue,
 }: IssueCardProps): React.JSX.Element {
-  const impact = (issue.impact?.toLowerCase() || "undefined") as
-    | "minor"
-    | "moderate"
-    | "serious"
-    | "critical"
-    | "undefined";
+  const impactClass = clsx({
+    'border-yellow-500': issue.impact === 'minor',
+    'border-orange-500': issue.impact === 'moderate',
+    'border-red-500': issue.impact === 'serious',
+    'border-purple-500': issue.impact === 'critical',
+    'border-gray-500': !issue.impact
+  });
 
   return (
-    <article className="themed-bg card">
+    <article className={`themed-bg card ${impactClass}`}>
       <header className="mb-1">
         <h2
           className={`text-lg font-semibold break-all whitespace-pre-wrap max-w-full`}
