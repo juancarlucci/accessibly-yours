@@ -15,6 +15,9 @@ export default function Controls({
 }: ControlsProps): React.JSX.Element {
   return (
     <div className="card p-4 shadow-md mb-6 flex flex-col md:flex-row md:items-center gap-4">
+      <label htmlFor="severity-filter" className="sr-only">
+        Filter by Severity
+      </label>
       <select
         className="btn btn-primary border rounded px-3 py-2"
         value={selectedImpact}
