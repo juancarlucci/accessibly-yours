@@ -13,6 +13,9 @@
     --text: theme("colors.white");
   }
 
+  * {
+    @apply box-border;
+  }
   html {
     @apply antialiased;
   }
