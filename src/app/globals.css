@@ -56,7 +56,6 @@
 
   .card {
     @apply rounded-lg shadow border p-4;
-    @apply border-gray-200 dark:border-gray-700;
   }
 
   .nav-fixed {
