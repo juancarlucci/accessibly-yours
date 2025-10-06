@@ -5,7 +5,7 @@ import Controls from "@/components/Controls";
 import IssueCard, { Issue } from "@/components/IssueCard";
 import clsx from "clsx";
 
-export default function DemoResultsPage(): React.JSX.Element {
+export default function DemoResultsPage() {
   const [selectedImpact, setSelectedImpact] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
   const [uiState, setUiState] = useState<
@@ -90,6 +90,8 @@ export default function DemoResultsPage(): React.JSX.Element {
 
   return (
     <main className="themed-bg px-6 py-16 pt-24">
+          <div className="max-w-3xl w-full px-6 mx-auto">
+
       <div className="mb-6">
         <Link href="/">
           <button className="btn btn-subtle">← Back to Home</button>
@@ -180,6 +182,7 @@ export default function DemoResultsPage(): React.JSX.Element {
           ))}
         </section>
       )}
+      </div>
     </main>
   );
 
