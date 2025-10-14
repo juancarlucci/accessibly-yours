@@ -1,15 +1,14 @@
-// app/layout.tsx
 import Footer from "@/components/Footer";
 import "./globals.css";
 import type { Metadata } from "next";
 import { ReactNode } from "react";
 import TopNav from "@/components/TopNav";
-import { Suspense } from 'react';
+import { Suspense } from "react";
+import ReactQueryProvider from "@/app/providers/ReactQueryProvider";
 
 export const metadata: Metadata = {
   title: "Accessibly Yours - Web Accessibility Scanner",
-  description:
-    "Check your website for accessibility issues and get recommendations for improvements.",
+  description: "Check your website for accessibility issues and get recommendations for improvements.",
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
@@ -21,8 +20,10 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       <body className="flex flex-col min-h-screen">
         <TopNav />
         <Suspense fallback={<div className="min-h-screen" />}>
-        <main className="flex-grow">{children}</main>
-        <Footer />
+          <ReactQueryProvider>
+            <main className="flex-grow">{children}</main>
+            <Footer />
+          </ReactQueryProvider>
         </Suspense>
       </body>
     </html>
