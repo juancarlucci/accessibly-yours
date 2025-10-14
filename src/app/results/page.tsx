@@ -4,19 +4,11 @@ import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { useSearchParams } from "next/navigation";
 import IssueCard from "@/components/IssueCard";
+import type { Issue } from "@/components/IssueCard";
 import Controls from "@/components/Controls";
 import ExportButtons from "@/components/ExportButtons";
 import Link from "next/link";
 import { getFromCache } from "@/utils/cache";
-
-// Define the Issue type according to your API response structure
-type Issue = {
-  code: string;
-  message: string;
-  selector: string;
-  impact?: string;
-  [key: string]: unknown;
-};
 
 export default function ResultsPage() {
   const searchParams = useSearchParams();
